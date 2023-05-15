@@ -1,0 +1,18 @@
+.productAdd {
+  .itemTableContanier {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15%;
+
+    @media (max-width: 1052px) {
+      width: 70%;
+    }
+    @media (max-width: 756px) {
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 756px) {
+    flex-direction: column;
+  }
+}
