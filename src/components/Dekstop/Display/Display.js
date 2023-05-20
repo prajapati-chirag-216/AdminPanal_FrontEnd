@@ -4,15 +4,17 @@ import SliderImages from "../SliderImages/SliderImages";
 import SimpleContainer from "../UI/Container";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import {
-  addDisplayImage,
-  deleteDisplayImage,
-  fetchDisplayImage,
-} from "../../../utils/api";
+import { deleteDisplayImage, fetchDisplayImage } from "../../../utils/api";
 import StatusButton from "../StatusButton/StatusButton";
+import SimpleModal from "../Modal/Modal";
+import AddDisplayForm from "./Form/AddDisplayForm";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../../store/ui-slice";
 
 const Display = () => {
   const matches = useMediaQuery("(max-width:700px)");
+  const dispatch = useDispatch();
+  const showModal = useSelector((state) => state.ui.addModelState);
   const [displayImages, setDisplayImages] = useState([]);
   const [isLoading, setIsLoading] = useState({
     status: true,
@@ -29,16 +31,19 @@ const Display = () => {
       throw err;
     }
   };
-
-  const addImgHandler = async (event) => {
-    setIsLoading({ status: true, activity: "Uploading.." });
-    try {
-      await addDisplayImage(event.target.files[0]);
-      setFetchData(true);
-    } catch (err) {
-      throw err;
+  const changeStateHandler = (state, isFetch = false) => {
+    if (isFetch) {
+      return setFetchData(true);
     }
+    setIsLoading(state);
   };
+  const openModalHandler = () => {
+    dispatch(uiActions.setAddModelState(true));
+  };
+  const closeModelHandler = () => {
+    dispatch(uiActions.setAddModelState(false));
+  };
+
   useEffect(() => {
     if (fetchData) {
       const fetchData = async () => {
@@ -57,6 +62,11 @@ const Display = () => {
   }, [fetchData]);
   return (
     <SimpleContainer>
+      {showModal && (
+        <SimpleModal onOpen={showModal} onClose={closeModelHandler}>
+          <AddDisplayForm onStateChange={changeStateHandler} />
+        </SimpleModal>
+      )}
       <Typography
         variant={matches ? "h6" : "h4"}
         color="black"
@@ -69,9 +79,12 @@ const Display = () => {
         variant="fullWidth"
         style={{ width: "100%", backgroundColor: "black", height: "2px" }}
       />
-      <StatusButton isLoading={isLoading} icon={<PhotoCamera />}>
+      <StatusButton
+        isLoading={isLoading}
+        icon={<PhotoCamera />}
+        onClick={openModalHandler}
+      >
         {isLoading.status ? isLoading.activity : "Upload"}
-        <input hidden accept="image/*" type="file" onChange={addImgHandler} />
       </StatusButton>
       <div
         style={{

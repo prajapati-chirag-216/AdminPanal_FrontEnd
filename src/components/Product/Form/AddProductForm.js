@@ -17,15 +17,13 @@ import {
 import classes from "./AddProductForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { productActions } from "../../../store/product-slice";
-import { Await, useLoaderData,Form} from "react-router-dom";
+import { Await, useLoaderData, Form } from "react-router-dom";
 import { uiActions } from "../../../store/ui-slice";
 
 const FINAL_BTN_ACTION = {
   addProduct: "Create Product",
   updateProduct: "Update Product",
 };
-
-
 
 const AddProductForm = ({ action }) => {
   const dispatch = useDispatch();
@@ -42,51 +40,42 @@ const AddProductForm = ({ action }) => {
 
   const changeNameHandler = (event) => {
     let name = "";
-    
-    const imageArray = event.target.files
-    
-    for(let key in imageArray){
 
-      if(key == 'length')
-        break;
-      name = name+imageArray[key].name+' , '
+    const imageArray = event.target.files;
 
+    for (let key in imageArray) {
+      if (key == "length") break;
+      name = name + imageArray[key].name + " , ";
     }
-    name = name.slice(0,-1)
+    name = name.slice(0, -1);
 
-    if (name!== '') {
+    if (name !== "") {
       document.getElementById("file-div").style.borderColor = "black";
     }
 
     setImageName(name);
   };
 
-
   const handleProductAction = async (event) => {
     event.preventDefault();
 
-    let images = []
+    let images = [];
 
-  for(let key in imageRef.current.files){
+    for (let key in imageRef.current.files) {
+      if (key == "length") break;
 
-    if(key == 'length')
-      break;
+      images.push(imageRef.current.files[key]);
+    }
 
-      images.push(imageRef.current.files[key])
-  }
-
-
-
- 
     const productDetails = {
       name: nameRef.current.value,
       price: priceRef.current.value,
       description: descriptionRef.current.value,
-      image:images,
+      image: images,
       status: statusRef.current.value,
       category: categoryRef.current.value,
     };
-    
+
     if (action === "add") {
       dispatch(
         productActions.setFetchProductData({
@@ -281,7 +270,5 @@ export async function loader() {
   }
   return result.length > 0 ? result : [{ name: "No-Category", _id: "Empty" }];
 }
-
-
 
 export default AddProductForm;

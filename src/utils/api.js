@@ -1,8 +1,6 @@
 import axios from "axios";
 
-
 const BACKAND_DOMAIN = "http://localhost:8000";
-
 
 export async function loginAdmin(userData) {
   try {
@@ -73,16 +71,13 @@ export async function resetPassword(userData) {
     throw err;
   }
 }
-export async function addDisplayImage(image) {
-
- 
+export async function addDisplayImage(displayData) {
   try {
-    const imageLink = await uploadToCloud(image)
-
-
+    const imageLink = await uploadToCloud(displayData.image);
+    console.log(imageLink);
     const response = await axios.post(
-      `${BACKAND_DOMAIN}/admin/addDisplayImage`,imageLink,
-      
+      `${BACKAND_DOMAIN}/admin/addDisplayImage`,
+      { ...displayData, image: imageLink },
       {
         withCredentials: true,
       }
@@ -98,14 +93,14 @@ export async function addDisplayImage(image) {
 }
 export async function fetchDisplayImage() {
   try {
-    const response = await axios.post(
+    const response = await axios.get(
       `${BACKAND_DOMAIN}/admin/fetchDisplayImage`,
-      {},
       {
         withCredentials: true,
       }
     );
     const data = response.data;
+    console.log(data);
     if (response.statusText !== "OK") {
       throw new Error({ message: data.message || "Unable to Login." });
     }
@@ -116,9 +111,9 @@ export async function fetchDisplayImage() {
 }
 export async function deleteDisplayImage(id) {
   try {
-    const response = await axios.post(
+    const response = await axios.delete(
       `${BACKAND_DOMAIN}/admin/deleteDisplayImage/${id}`,
-      {},
+      // {},
       {
         withCredentials: true,
       }
@@ -140,58 +135,49 @@ export const getProducts = async () => {
 
   const data = await productdata.json();
   return data;
-
-  
-
 };
 
-const uploadToCloud = async(image) =>{
+const uploadToCloud = async (image) => {
+  const formData = new FormData();
 
-  const formData = new FormData()
+  formData.append("file", image);
+  formData.append("upload_preset", "AddImage");
+  formData.append("cloud_name", "dzpuekeql");
 
-  formData.append('file',image)
-  formData.append('upload_preset','AddImage')
-  formData.append('cloud_name','dzpuekeql')
-  
-  const result = await fetch('https://api.cloudinary.com/v1_1/dzpuekeql/image/upload',{
-    method:'POST',
-    body:formData
-   })
-   const data = await result.json()
-  
-   return data.secure_url
+  const result = await fetch(
+    "https://api.cloudinary.com/v1_1/dzpuekeql/image/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+  const data = await result.json();
 
-}
-
-
+  return data.secure_url;
+};
 
 export const addProduct = async (productObj) => {
+  console.log(productObj, "kean");
 
-  console.log(productObj,'kean')  
-  
-  const response = productObj.image.map(async(image)=>{
-  
-    return  await uploadToCloud(image) 
- 
-   })
+  const response = productObj.image.map(async (image) => {
+    return await uploadToCloud(image);
+  });
 
-   const result = await Promise.all(response)
+  const result = await Promise.all(response);
 
+  console.log(result, "confiem");
 
-  console.log(result,'confiem')
+  productObj.image = result;
 
-  productObj.image = result
- 
   try {
-  
     const response = await axios.post(
-      `${BACKAND_DOMAIN}/addproduct`,   
+      `${BACKAND_DOMAIN}/addproduct`,
       productObj,
       {
         withCredentials: true,
       }
     );
-    console.log(response,'res ayo');
+    console.log(response, "res ayo");
     const data = response.data;
     if (response.statusText !== "Created") {
       throw new Error({ message: data.message || "Unable to Login." });
@@ -216,30 +202,23 @@ export const deleteProduct = async (id) => {
 };
 
 export const updateProduct = async (product, id) => {
+  const { image, ...newProduct } = product;
 
+  try {
+    if (image.length !== 0) {
+      const response = image.map(async (image) => {
+        return await uploadToCloud(image);
+      });
 
-       const{image , ...newProduct} = product;
+      const result = await Promise.all(response);
 
-
-
-  try { 
-
-    if(image.length !== 0){
-
-
-      
-      const response = image.map(async(image)=>{
-        return  await uploadToCloud(image) 
-      })
-      
-      const result = await Promise.all(response)
-
-      newProduct.image = result
+      newProduct.image = result;
     }
 
-
-
-    const { data } = await axios.patch(`${BACKAND_DOMAIN}/updateproduct/${id}`, newProduct,);
+    const { data } = await axios.patch(
+      `${BACKAND_DOMAIN}/updateproduct/${id}`,
+      newProduct
+    );
 
     console.log(data);
     return data;
@@ -249,12 +228,11 @@ export const updateProduct = async (product, id) => {
 };
 
 export async function addCategory(catData) {
+  console.log(catData);
 
-  console.log(catData)
+  const imageLink = await uploadToCloud(catData.image);
 
-  const imageLink = await uploadToCloud(catData.image)
-
-  catData.image = imageLink
+  catData.image = imageLink;
 
   try {
     const response = await axios.post(
@@ -277,30 +255,25 @@ export async function addCategory(catData) {
   }
 }
 
+export const updateCategories = async (categoryObj, id) => {
+  const { image, ...newCategoryObj } = categoryObj;
 
-export const  updateCategories = async(categoryObj,id) =>{
+  if ("image" in categoryObj) {
+    const imageLink = await uploadToCloud(image);
 
+    newCategoryObj.image = imageLink;
+  }
 
-     const{image, ...newCategoryObj} = categoryObj 
-
-    if('image' in categoryObj ){
-
-        const imageLink = await uploadToCloud(image);
-
-        newCategoryObj.image = imageLink
-    }
-
-
-    try{
-
-  
-    const {data} = await axios.patch(`${BACKAND_DOMAIN}/updatecategory/${id}`,newCategoryObj)
-      return data
-    }catch(err){
-      console.log('inside update category front',err)
-    }
-
-}
+  try {
+    const { data } = await axios.patch(
+      `${BACKAND_DOMAIN}/updatecategory/${id}`,
+      newCategoryObj
+    );
+    return data;
+  } catch (err) {
+    console.log("inside update category front", err);
+  }
+};
 
 export const fetchCategories = async () => {
   try {
@@ -308,7 +281,7 @@ export const fetchCategories = async () => {
       withCredentials: true,
     });
     const data = response.data;
-   
+
     return data;
   } catch (err) {
     throw err;
