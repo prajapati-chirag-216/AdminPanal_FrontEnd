@@ -74,7 +74,6 @@ export async function resetPassword(userData) {
 export async function addDisplayImage(displayData) {
   try {
     const imageLink = await uploadToCloud(displayData.image);
-    console.log(imageLink);
     const response = await axios.post(
       `${BACKAND_DOMAIN}/admin/addDisplayImage`,
       { ...displayData, image: imageLink },
@@ -100,7 +99,6 @@ export async function fetchDisplayImage() {
       }
     );
     const data = response.data;
-    console.log(data);
     if (response.statusText !== "OK") {
       throw new Error({ message: data.message || "Unable to Login." });
     }
@@ -157,15 +155,11 @@ const uploadToCloud = async (image) => {
 };
 
 export const addProduct = async (productObj) => {
-  console.log(productObj, "kean");
-
   const response = productObj.image.map(async (image) => {
     return await uploadToCloud(image);
   });
 
   const result = await Promise.all(response);
-
-  console.log(result, "confiem");
 
   productObj.image = result;
 
@@ -177,7 +171,6 @@ export const addProduct = async (productObj) => {
         withCredentials: true,
       }
     );
-    console.log(response, "res ayo");
     const data = response.data;
     if (response.statusText !== "Created") {
       throw new Error({ message: data.message || "Unable to Login." });
@@ -220,7 +213,6 @@ export const updateProduct = async (product, id) => {
       newProduct
     );
 
-    console.log(data);
     return data;
   } catch (err) {
     throw err;
@@ -228,8 +220,6 @@ export const updateProduct = async (product, id) => {
 };
 
 export async function addCategory(catData) {
-  console.log(catData);
-
   const imageLink = await uploadToCloud(catData.image);
 
   catData.image = imageLink;
@@ -244,7 +234,6 @@ export async function addCategory(catData) {
         withCredentials: true,
       }
     );
-    console.log(response);
     const data = response.data;
     if (response.statusText !== "OK") {
       throw new Error({ message: data.message || "Unable to Login." });
@@ -270,9 +259,7 @@ export const updateCategories = async (categoryObj, id) => {
       newCategoryObj
     );
     return data;
-  } catch (err) {
-    console.log("inside update category front", err);
-  }
+  } catch (err) {}
 };
 
 export const fetchCategories = async () => {

@@ -82,7 +82,7 @@ const columns = [
 const ItemTable = () => {
   const dispatch = useDispatch();
   const productData = useSelector((state) => state.product.products);
-  
+
   const fetchProductData = useSelector(
     (state) => state.product.fetchProductData
   );
@@ -94,7 +94,7 @@ const ItemTable = () => {
     setRows(
       productData?.map((product) => ({
         name: product.name,
-        description: product.description.split('.')[0],
+        description: product.description.split(".")[0],
         icon: (
           <img
             width="50px"
@@ -118,7 +118,6 @@ const ItemTable = () => {
     const fetch = async () => {
       try {
         const data = await getProducts();
-        console.log(data);
         dispatch(productActions.setProducts(data));
       } catch (err) {
         console.error(err);

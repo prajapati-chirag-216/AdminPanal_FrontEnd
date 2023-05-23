@@ -29,7 +29,7 @@ const categorySlice = createSlice({
       // } else if (action.payload.type === "ADD") {
       //   state.categories = [...state.categories, action.payload.newProduct];
       // } else {
-        state.categories = action.payload;
+      state.categories = action.payload;
       // }
     },
     setFetchCategoryData(state, action) {
@@ -37,7 +37,6 @@ const categorySlice = createSlice({
       state.fetchCategoryData.activity = action.payload.activity;
     },
     setUpdateCategoryId(state, action) {
-      console.log(action.payload,'kjhtg')
       state.updateCategoryId = action.payload;
     },
   },

@@ -1,7 +1,11 @@
 import React, { useState, useRef } from "react";
 import { Button, TextField, Typography, useMediaQuery } from "@mui/material";
 import AddPhotoAlternate from "@mui/icons-material/AddPhotoAlternate";
-import { addCategory, updateCategories, updateProduct } from "../../../utils/api";
+import {
+  addCategory,
+  updateCategories,
+  updateProduct,
+} from "../../../utils/api";
 import classes from "./AddCategoryForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { categoryActions } from "../../../store/category-slice";
@@ -70,7 +74,6 @@ const AddCategoryForm = ({ action }) => {
       );
       try {
         dispatch(uiActions.setUpdateModelState(false));
-        console.log(updateId,'sf')
         await updateCategories(updateObj, updateId);
         dispatch(
           categoryActions.setFetchCategoryData({
