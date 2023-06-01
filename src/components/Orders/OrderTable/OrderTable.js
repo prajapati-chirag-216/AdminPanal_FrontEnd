@@ -128,7 +128,7 @@ const OrderTable = () => {
         deliveryStatus:order.deliveryStatus,
         Customer:order.shippingAddress.userName,
         Email:order.contactInformation.email,
-        Phone:toString(order.contactInformation.phoneNumber).split(',').join(''),
+        Phone:order.contactInformation.phoneNumber,
         Address:order.shippingAddress.address,
         createdAt: new Date(order.createdAt).toLocaleString(),
         updatedAt: new Date(order.updatedAt).toLocaleString(),

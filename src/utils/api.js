@@ -295,6 +295,8 @@ export const fetchOrders = async() =>{
         const response = await axios.get(`${BACKAND_DOMAIN}/getAllOrders`)
 
         const data = await response.data
+
+    
          console.log(data,'iojo')
 
          return data
