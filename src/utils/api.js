@@ -286,3 +286,19 @@ export const deleteCategory = async (id) => {
     throw err;
   }
 };
+
+
+export const fetchOrders = async() =>{
+
+
+     try{
+        const response = await axios.get(`${BACKAND_DOMAIN}/getAllOrders`)
+
+        const data = await response.data
+         console.log(data,'iojo')
+
+         return data
+     }catch(err){
+        throw err
+     }
+}

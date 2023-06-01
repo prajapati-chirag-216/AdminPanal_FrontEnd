@@ -22,6 +22,7 @@ import AddProduct from "./components/Product/AddProduct";
 import { loader as CategoryLoader } from "./components/Product/Form/AddProductForm";
 import "./App.css";
 import AddCategory from "./components/Category/AddCategory";
+import Orders from "./components/Orders/Orders";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -58,6 +59,10 @@ const router = createBrowserRouter(
             element={<AddCategory />}
             loader={CategoryLoader}
           />
+          <Route
+            path="/admin/orders"
+            element={<Orders/>}
+            />
         </Route>
       </Route>
     </Route>
