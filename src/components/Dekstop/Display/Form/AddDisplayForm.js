@@ -1,10 +1,14 @@
 import React, { useState, useRef } from "react";
-import { Button, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Button, TextField, Typography, useMediaQuery,MenuItem } from "@mui/material";
+import { Await, useLoaderData } from "react-router-dom";
 import AddPhotoAlternate from "@mui/icons-material/AddPhotoAlternate";
+import { Suspense } from "react";
 import classes from "./AddDisplayForm.module.css";
 import { useDispatch } from "react-redux";
 import { addDisplayImage } from "../../../../utils/api";
 import { uiActions } from "../../../../store/ui-slice";
+import { fetchCategories } from "../../../../utils/api";
+
 
 const AddDisplayForm = (props) => {
   const dispatch = useDispatch();
@@ -13,6 +17,10 @@ const AddDisplayForm = (props) => {
   const textRef = useRef();
   const labelRef = useRef();
   const imageRef = useRef();
+  const categoryRef = useRef();
+
+
+  const loaderData = useLoaderData();
 
   const changeNameHandler = (event) => {
     const name = event.target.files[0].name;
@@ -72,6 +80,29 @@ const AddDisplayForm = (props) => {
           required
         />
 
+        <Suspense>
+          <Await resolve={loaderData}>
+            {(categories) => (
+              <TextField
+                inputRef={categoryRef}
+                id="outlined-select-category"
+                label="Product Category"
+                name="category"
+                fullWidth={true}
+                required
+                select
+                defaultValue={categories[0]._id}
+              >
+                {categories.map((category) => (
+                  <MenuItem key={category._id} value={category._id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          </Await>
+        </Suspense>
+
         <div className={classes["file-input"]} id="file-div">
           <label htmlFor="inputTag" id="image-label">
             <AddPhotoAlternate
@@ -118,5 +149,16 @@ const AddDisplayForm = (props) => {
     </div>
   );
 };
+
+export async function loader() {
+  let result;
+  try {
+    result = await fetchCategories();
+  } catch (err) {
+    throw err;
+  }
+  return result.length > 0 ? result : [{ name: "No-Category", _id: "Empty" }];
+}
+
 
 export default AddDisplayForm;

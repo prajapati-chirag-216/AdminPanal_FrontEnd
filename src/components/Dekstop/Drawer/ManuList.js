@@ -36,7 +36,7 @@ const ManuList = (props) => {
           <ListItemButton
             sx={{ height: "100px", display: "flex", flexDirection: "column" }}
             onClick={() => {
-              navigate("/admin/customer");
+              navigate("/admin/customers");
             }}
           >
             <ListItemIcon style={{ justifyContent: "center" }}>
@@ -62,7 +62,7 @@ const ManuList = (props) => {
           <ListItemButton
             sx={{ height: "100px", display: "flex", flexDirection: "column" }}
             onClick={() => {
-              navigate("/admin/order");
+              navigate("/admin/orders");
             }}
           >
             <ListItemIcon style={{ justifyContent: "center" }}>

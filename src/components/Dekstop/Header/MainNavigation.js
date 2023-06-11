@@ -118,8 +118,6 @@ const MainNavigation = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={logoutHandler}>logout</MenuItem>
     </Menu>
   );
@@ -141,7 +139,7 @@ const MainNavigation = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="error">
             <MailIcon />
@@ -160,7 +158,7 @@ const MainNavigation = () => {
           </Badge>
         </IconButton>
         <p>Notifications</p>
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -168,10 +166,11 @@ const MainNavigation = () => {
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
+          onClick={logoutHandler}
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>logout</p>
       </MenuItem>
     </Menu>
   );
@@ -193,11 +192,11 @@ const MainNavigation = () => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            sx={{alignSelf:'center',display: { xs: "none", sm: "block" } }}
           >
-            MUI
+            Shoppee Admin Panel
           </Typography>
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -205,10 +204,10 @@ const MainNavigation = () => {
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
             />
-          </Search>
+          </Search> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
@@ -225,10 +224,11 @@ const MainNavigation = () => {
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               size="large"
               edge="end"
+              sx={{transform:'scale(1.7)'}}
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
