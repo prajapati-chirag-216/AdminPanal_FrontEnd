@@ -18,6 +18,8 @@ import { uiActions } from "../../../store/ui-slice";
 import { categoryActions } from "../../../store/category-slice";
 import { orderActions } from "../../../store/order-slice";
 import { fetchOrders } from "../../../utils/api";
+import UpdateOrderForm from '../OrderForm/updateOrder-Form'
+import { deleteOrder } from "../../../utils/api";
 
 const columns = [
   { id: "products", label: "products", minWidth: 80 },
@@ -102,15 +104,13 @@ const columns = [
 
 const OrderTable = () => {
   const dispatch = useDispatch();
-//   const categoryData = useSelector((state) => state.category.categories);
+
 
   const orderData = useSelector((state) => state.order.orders)
 
   console.log(orderData)
 
-//   const fetchCategoryData = useSelector(
-//     (state) => state.category.fetchCategoryData
-//   );
+
 
   const fetchOrderData = useSelector(
     (state) => state.order.fetchOrderData
@@ -122,8 +122,9 @@ const OrderTable = () => {
   useEffect(() => {
     setRows(
       orderData?.map((order) => ({
-        products: order.orderedItems.map((item)=>item.name).join(','),
-        Bill:order.totalPrice,
+        _id:order._id,
+        products: order.orderedItems.map((item)=>item.name+'- x'+item.quntity).join(' , '),
+        Bill:order.totalPrice+'$',
         TransactionId:order._id,
         deliveryStatus:order.deliveryStatus,
         Customer:order.shippingAddress.userName,
@@ -169,15 +170,15 @@ const OrderTable = () => {
   const handleDeleteChange = async (id) => {
     if (!id) return;
     dispatch(
-      categoryActions.setFetchCategoryData({
+      orderActions.setFetchOrderData({
         status: true,
         activity: "Deleting..",
       })
     );
     try {
-      await deleteCategory(id);
+      await deleteOrder(id);
       dispatch(
-        categoryActions.setFetchCategoryData({
+        orderActions.setFetchOrderData({
           status: false,
           activity: "Deleting..",
         })
@@ -189,7 +190,7 @@ const OrderTable = () => {
 
   const handleUpdateChange = (id) => {
     console.log(id,'jeh')
-    dispatch(categoryActions.setUpdateCategoryId(id));
+    dispatch(orderActions.setUpdateOrderId(id));
     dispatch(uiActions.setUpdateModelState(true));
   };
 
@@ -210,17 +211,30 @@ const OrderTable = () => {
   };
 
   const Text_Color = {
-    status: "green",
+    deliveryStatus:{
+        Pending:'red',
+        Shipped:'gray',
+        'Out For Delivery':'green'
+    },
+    
+    TransactionId:'blue'
   };
+
+  const font_weight = {
+     
+    deliveryStatus:'700'
+     
+  }
+  
 
   if (!rows) return <div>Loading...</div>;
   return (
     <Fragment>
-      {/* {showModel && (
+      {showModel && (
         <SimpleModal onOpen={showModel} onClose={closeModelHandler}>
-          <AddCategoryForm action="update" />
+          <UpdateOrderForm action="update" />
         </SimpleModal>
-      )} */}
+      )}
       <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "1%" }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
@@ -268,7 +282,7 @@ const OrderTable = () => {
                         }
                         return (
                           <TableCell
-                            style={{ color: Text_Color[column.id] }}
+                            style={{ color: column.id === 'deliveryStatus'?Text_Color[column.id][value]: Text_Color[column.id],fontWeight:font_weight[column.id]}}
                             key={column.id}
                             align={column.align}
                           >

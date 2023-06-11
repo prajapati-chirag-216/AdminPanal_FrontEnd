@@ -1,5 +1,6 @@
 import * as React from "react";
 import Paper from "@mui/material/Paper";
+import { useState,useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,64 +10,120 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Typography } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { getTodaysOrders } from "../../../utils/api";
+
+
+
 
 const columns = [
-  { id: "products", label: "Products", minWidth: 100 },
-  { id: "images", label: "Images", minWidth: 100 },
+  { id: "products", label: "products", minWidth: 80 },
   {
-    id: "status",
-    label: "Status",
-    minWidth: 100,
+    id: "Bill",
+    label: "Bill",
+    minWidth: 80,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "orderAdress",
-    label: "OrderAdress",
-    minWidth: 170,
+    id: "TransactionId",
+    label: "TransactionId",
+    minWidth: 80,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "orderAt",
-    label: "OrderAt",
-    minWidth: 170,
+    id: "deliveryStatus",
+    label: "deliveryStatus",
+    minWidth: 80,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Customer",
+    label: "Customer",
+    minWidth: 80,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Email",
+    label: "Email",
+    minWidth: 80,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Phone",
+    label: "Phone",
+    minWidth: 80,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "Address",
+    label: "Address",
+    minWidth: 80,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "createdAt",
+    label: "createdAt",
+    minWidth: 80,
     align: "right",
     format: (value) => value.toFixed(2),
-  },
+  }
 ];
 
-function createData(products, images, status, orderAdress, orderAt) {
-  return { products, images, status, orderAdress, orderAt };
-}
 
-const rows = [
-  createData(
-    "India",
-    "IN",
-    1324171354,
-    3287263,
-    new Date().toLocaleDateString()
-  ),
-  createData(
-    "China",
-    "CN",
-    1403500365,
-    9596961,
-    new Date().toLocaleDateString()
-  ),
-  createData("Italy", "IT", 60483973, 301340, new Date().toLocaleDateString()),
-  createData(
-    "United States",
-    "US",
-    327167434,
-    9833520,
-    new Date().toLocaleDateString()
-  ),
-];
+
+
 
 const OrdersTable = () => {
+
+
+
   const matches = useMediaQuery("(max-width:700px)");
+  const [todayOrderObj,setTodayOrderObj] = useState('');
+  const [rows, setRows] = useState([]);
+
+
+
+
+useEffect(() =>{
+
+  const run =  async() =>{
+
+       const data = await getTodaysOrders();
+
+       setTodayOrderObj(data)
+  }
+     
+  run();
+
+  console.log(todayOrderObj)
+
+},[])
+
+console.log(todayOrderObj)
+
+useEffect(() => {
+  setRows(
+    todayOrderObj?todayOrderObj.map((order) => ({
+      _id:order._id,
+      products: order.orderedItems.map((item)=>item.name+'- x'+item.quntity).join(' , '),
+      Bill:order.totalPrice,
+      TransactionId:order._id,
+      deliveryStatus:order.deliveryStatus,
+      Customer:order.shippingAddress.userName,
+      Email:order.contactInformation.email,
+      Phone:order.contactInformation.phoneNumber,
+      Address:order.shippingAddress.address,
+      createdAt: new Date(order.createdAt).toLocaleString(),
+    })):[]
+  );
+}, [todayOrderObj]);
+
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);

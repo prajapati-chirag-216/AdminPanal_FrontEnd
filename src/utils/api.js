@@ -296,11 +296,81 @@ export const fetchOrders = async() =>{
 
         const data = await response.data
 
-    
-         console.log(data,'iojo')
-
          return data
      }catch(err){
         throw err
      }
+}
+
+export const updateOrder = async(updateObj, updateId) =>{
+
+     try{
+         const response = await axios.patch(`${BACKAND_DOMAIN}/updateOrderStatus/${updateId}`,updateObj);
+
+         const data = await response.data;
+
+         console.log(data,'iuhu')
+
+         return data
+     }catch(err){
+      throw err
+   }
+}
+
+
+export const getOrderById = async(id) =>{
+
+     try{
+       const response = await axios.get(`${BACKAND_DOMAIN}/getOrderById/${id}`);
+
+       const data = await response.data
+
+       return data
+     }catch(err){
+      throw err
+   }
+}
+
+
+export const deleteOrder = async(id) =>{
+
+     try{
+       const response = await axios.delete(`${BACKAND_DOMAIN}/deleteOrder/${id}`);
+
+       const data = await response.data
+
+       return data
+     }catch(err){
+      throw err
+   }
+}
+
+
+export const getTodaysOrders = async() =>{
+
+      try{
+          const response = await axios.get(`${BACKAND_DOMAIN}/getTodaysOrders`);
+
+          const data = await response.data
+
+          return data
+      }catch(err){
+         throw err;
+      }
+}
+
+
+export const getUsers = async() =>{
+
+     try{
+        const response = await axios.get(`${BACKAND_DOMAIN}/getAllUsers`);
+
+        
+        const data = await response.data
+        
+        console.log(data)
+        return data
+     }catch(err){
+      throw err;
+   }
 }

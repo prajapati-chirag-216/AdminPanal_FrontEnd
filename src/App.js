@@ -20,9 +20,11 @@ import Error from "./pages/Error/Error";
 import Success from "./pages/Success/Success";
 import AddProduct from "./components/Product/AddProduct";
 import { loader as CategoryLoader } from "./components/Product/Form/AddProductForm";
+import {loader as DisplayCatagoryLoader} from "./components/Dekstop/Display/Form/AddDisplayForm"
 import "./App.css";
 import AddCategory from "./components/Category/AddCategory";
 import Orders from "./components/Orders/Orders";
+import UserPage from "./components/Users/user";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,7 +50,7 @@ const router = createBrowserRouter(
       <Route element={<Layout />}>
         <Route element={<ProtectedRoutes destination="/login" />}>
           <Route index element={<Navigate to="/admin" />} />
-          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin" element={<Dashboard />} loader={DisplayCatagoryLoader} />
           <Route
             path="/admin/product"
             element={<AddProduct />}
@@ -64,6 +66,10 @@ const router = createBrowserRouter(
             element={<Orders/>}
             />
         </Route>
+        <Route
+           path="/admin/customers"
+           element={<UserPage/>}
+           />
       </Route>
     </Route>
   )
