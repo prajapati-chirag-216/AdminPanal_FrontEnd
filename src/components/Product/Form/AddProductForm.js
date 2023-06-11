@@ -75,7 +75,6 @@ const AddProductForm = ({ action }) => {
       status: statusRef.current.value,
       category: categoryRef.current.value,
     };
-
     if (action === "add") {
       dispatch(
         productActions.setFetchProductData({
