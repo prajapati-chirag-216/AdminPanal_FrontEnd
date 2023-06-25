@@ -12,14 +12,13 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import TableRow from "@mui/material/TableRow";
 import { useDispatch, useSelector } from "react-redux";
 import SimpleModal from "../../Dekstop/Modal/Modal";
-import { deleteCategory, fetchCategories } from "../../../utils/api";
-import { IconButton } from "@mui/material";
+import { Container, IconButton } from "@mui/material";
 import { uiActions } from "../../../store/ui-slice";
-import { categoryActions } from "../../../store/category-slice";
 import { orderActions } from "../../../store/order-slice";
 import { fetchOrders } from "../../../utils/api";
-import UpdateOrderForm from '../OrderForm/updateOrder-Form'
+import UpdateOrderForm from "../OrderForm/updateOrder-Form";
 import { deleteOrder } from "../../../utils/api";
+import LoadingSpinner from "../../Dekstop/UI/LoadingSpinner";
 
 const columns = [
   { id: "products", label: "products", minWidth: 80 },
@@ -27,70 +26,70 @@ const columns = [
     id: "Bill",
     label: "Bill",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "TransactionId",
     label: "TransactionId",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "deliveryStatus",
     label: "deliveryStatus",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "Customer",
     label: "Customer",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "Email",
     label: "Email",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "Phone",
     label: "Phone",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "Address",
     label: "Address",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "createdAt",
     label: "createdAt",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "updatedAt",
     label: "updatedAt",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "Delete",
     label: "Delete",
     minWidth: 80,
-    align: "right",
+    align: "center",
     format: (value) => value.toFixed(2),
   },
   {
@@ -105,16 +104,11 @@ const columns = [
 const OrderTable = () => {
   const dispatch = useDispatch();
 
+  const orderData = useSelector((state) => state.order.orders);
 
-  const orderData = useSelector((state) => state.order.orders)
+  console.log(orderData);
 
-  console.log(orderData)
-
-
-
-  const fetchOrderData = useSelector(
-    (state) => state.order.fetchOrderData
-  )
+  const fetchOrderData = useSelector((state) => state.order.fetchOrderData);
   const showModel = useSelector((state) => state.ui.updateModelState);
 
   const [rows, setRows] = useState([]);
@@ -122,15 +116,17 @@ const OrderTable = () => {
   useEffect(() => {
     setRows(
       orderData?.map((order) => ({
-        _id:order._id,
-        products: order.orderedItems.map((item)=>item.name+'- x'+item.quntity).join(' , '),
-        Bill:order.totalPrice+'$',
-        TransactionId:order._id,
-        deliveryStatus:order.deliveryStatus,
-        Customer:order.shippingAddress.userName,
-        Email:order.contactInformation.email,
-        Phone:order.contactInformation.phoneNumber,
-        Address:order.shippingAddress.address,
+        _id: order._id,
+        products: order.orderedItems
+          .map((item) => item.name + "- x" + item.quntity)
+          .join(" , "),
+        Bill: order.totalPrice + "$",
+        TransactionId: order._id,
+        deliveryStatus: order.deliveryStatus,
+        Customer: order.shippingAddress.userName,
+        Email: order.contactInformation.email,
+        Phone: order.contactInformation.phoneNumber,
+        Address: order.shippingAddress.address,
         createdAt: new Date(order.createdAt).toLocaleString(),
         updatedAt: new Date(order.updatedAt).toLocaleString(),
       }))
@@ -147,10 +143,7 @@ const OrderTable = () => {
       }
     };
     try {
-      if (
-        !fetchOrderData.status ||
-        fetchOrderData.activity === "Fetching.."
-      ) {
+      if (!fetchOrderData.status || fetchOrderData.activity === "Fetching..") {
         fetch()
           .then((res) =>
             dispatch(
@@ -189,7 +182,6 @@ const OrderTable = () => {
   };
 
   const handleUpdateChange = (id) => {
-    console.log(id,'jeh')
     dispatch(orderActions.setUpdateOrderId(id));
     dispatch(uiActions.setUpdateModelState(true));
   };
@@ -211,23 +203,31 @@ const OrderTable = () => {
   };
 
   const Text_Color = {
-    deliveryStatus:{
-        Pending:'red',
-        Shipped:'gray',
-        'Out For Delivery':'green'
+    deliveryStatus: {
+      Pending: "red",
+      Shipped: "gray",
+      "Out For Delivery": "green",
     },
-    
-    TransactionId:'blue'
+
+    TransactionId: "blue",
   };
 
   const font_weight = {
-     
-    deliveryStatus:'700'
-     
-  }
-  
+    deliveryStatus: "600",
+  };
 
-  if (!rows) return <div>Loading...</div>;
+  if (!rows)
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        <LoadingSpinner />
+      </Container>
+    );
   return (
     <Fragment>
       {showModel && (
@@ -235,8 +235,15 @@ const OrderTable = () => {
           <UpdateOrderForm action="update" />
         </SimpleModal>
       )}
-      <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "1%" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+      <Paper
+        sx={{
+          width: "100%",
+          overflow: "hidden",
+          marginTop: "1%",
+          boxShadow: "0px 0px 8px rgb(200,200,200)",
+        }}
+      >
+        <TableContainer sx={{ maxHeight: 600 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -244,7 +251,13 @@ const OrderTable = () => {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    sx={{
+                      minWidth: column.minWidth,
+                      fontSize: "1.1rem",
+                      textTransform: "capitalize",
+                      padding: "1.5rem 1rem",
+                      letterSpacing: "0.5px",
+                    }}
                   >
                     {column.label}
                   </TableCell>
@@ -282,7 +295,13 @@ const OrderTable = () => {
                         }
                         return (
                           <TableCell
-                            style={{ color: column.id === 'deliveryStatus'?Text_Color[column.id][value]: Text_Color[column.id],fontWeight:font_weight[column.id]}}
+                            sx={{
+                              color:
+                                column.id === "deliveryStatus"
+                                  ? Text_Color[column.id][value]
+                                  : Text_Color[column.id],
+                              fontSize: "1rem",
+                            }}
                             key={column.id}
                             align={column.align}
                           >

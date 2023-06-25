@@ -8,8 +8,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { useMediaQuery } from "@mui/material";
-import {Typography} from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
+import { Typography } from "@mui/material";
 import { getUsers } from "../../../utils/api";
 
 const columns = [
@@ -18,14 +18,14 @@ const columns = [
     id: "Email",
     label: "Email",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "Phone",
     label: "Phone",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
@@ -37,76 +37,83 @@ const columns = [
   },
 ];
 
-
 const UserTable = () => {
+  const matches = useMediaQuery("(max-width:700px)");
+  const [userObj, setuserObj] = useState("");
+  const [rows, setRows] = useState([]);
 
+  useEffect(() => {
+    const run = async () => {
+      const data = await getUsers();
 
+      console.log(data);
 
-    const matches = useMediaQuery("(max-width:700px)");
-    const [userObj,setuserObj] = useState('');
-    const [rows, setRows] = useState([]);
-  
-  
-  
-  
-  useEffect(() =>{
-  
-    const run =  async() =>{
-  
-         const data = await getUsers();
+      setuserObj(data);
+    };
 
-         console.log(data)
-  
-         setuserObj(data)
-    }
-       
-    run(); 
-  },[])
-  
- 
-  
+    run();
+  }, []);
+
   useEffect(() => {
     setRows(
-        userObj?userObj.map((user) => ({
-         UserId:user._id,
-        Email:user.email,
-        Phone:user.phoneNo,
-        'Joining Date': new Date(user.createdAt).toLocaleString(),
-      })):[]
+      userObj
+        ? userObj.map((user) => ({
+            UserId: user._id,
+            Email: user.email,
+            Phone: user.phoneNo,
+            "Joining Date": new Date(user.createdAt).toLocaleString(),
+          }))
+        : []
     );
   }, [userObj]);
-  
-  
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(+event.target.value);
-      setPage(0);
-    };
-  
-    return (
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        align="center"
+        sx={{
+          width: "8rem",
+          fontSize: !matches ? "1.8rem" : "1.5rem",
+          letterSpacing: "1px",
+          borderBottom: "1px solid rgb(80,80,80)",
+          textTransform: "uppercase",
+          color: "rgb(80,80,80)",
+        }}
+      >
+        Users
+      </Typography>
       <Paper
         sx={{
           width: "100%",
           overflow: "hidden",
-          marginTop: "3rem",
           borderRight: "5px",
-          boxShadow: "2px 2px 8px gray",
+          boxShadow: "0px 0px 8px rgb(200,200,200)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          margin: "3rem auto",
+          margin: "2rem auto",
         }}
       >
-        <Typography align="center" variant={matches ? "h6" : "h4"} padding={2}>
-          Users
-        </Typography>
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer sx={{ maxHeight: 600 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -114,7 +121,12 @@ const UserTable = () => {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth, fontSize: "1.5rem" }}
+                    style={{
+                      minWidth: column.minWidth,
+                      fontSize: "1.2rem",
+                      textTransform: "capitalize",
+                      padding: "1.5rem 1rem",
+                    }}
                   >
                     {column.label}
                   </TableCell>
@@ -130,7 +142,11 @@ const UserTable = () => {
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
-                          <TableCell key={column.id} align={column.align}>
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            sx={{ fontSize: "1rem" }}
+                          >
                             {column.format && typeof value === "number"
                               ? column.format(value)
                               : value}
@@ -153,8 +169,8 @@ const UserTable = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-    );
-  };
-  
-  export default UserTable;
-  
+    </Box>
+  );
+};
+
+export default UserTable;

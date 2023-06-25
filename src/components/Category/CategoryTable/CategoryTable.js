@@ -14,38 +14,39 @@ import { useDispatch, useSelector } from "react-redux";
 import SimpleModal from "../../Dekstop/Modal/Modal";
 import AddCategoryForm from "../Form/AddCategoryForm";
 import { deleteCategory, fetchCategories } from "../../../utils/api";
-import { IconButton } from "@mui/material";
+import { Box, Container, IconButton, Typography } from "@mui/material";
 import { uiActions } from "../../../store/ui-slice";
 import { categoryActions } from "../../../store/category-slice";
+import LoadingSpinner from "../../Dekstop/UI/LoadingSpinner";
 
 const columns = [
-  { id: "name", label: "Name", minWidth: 80 },
+  { id: "name", label: "Name", minWidth: 200 },
   {
     id: "icon",
     label: "icon",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "createdAt",
     label: "createdAt",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "updatedAt",
     label: "updatedAt",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "Delete",
     label: "Delete",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
@@ -72,7 +73,14 @@ const CategoryTable = () => {
       categoryData?.map((category) => ({
         _id: category._id,
         name: category.name,
-        icon: <img width='50px' height='50px' style={{objectFit:'cover'}}src={category.image}/>,
+        icon: (
+          <img
+            width="50px"
+            height="50px"
+            style={{ objectFit: "cover" }}
+            src={category.image}
+          />
+        ),
         createdAt: new Date(category.createdAt).toLocaleString(),
         updatedAt: new Date(category.updatedAt).toLocaleString(),
       }))
@@ -131,7 +139,7 @@ const CategoryTable = () => {
   };
 
   const handleUpdateChange = (id) => {
-    console.log(id,'jeh')
+    console.log(id, "jeh");
     dispatch(categoryActions.setUpdateCategoryId(id));
     dispatch(uiActions.setUpdateModelState(true));
   };
@@ -156,7 +164,18 @@ const CategoryTable = () => {
     status: "green",
   };
 
-  if (!rows) return <div>Loading...</div>;
+  if (!rows)
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        <LoadingSpinner />
+      </Container>
+    );
   return (
     <Fragment>
       {showModel && (
@@ -164,8 +183,15 @@ const CategoryTable = () => {
           <AddCategoryForm action="update" />
         </SimpleModal>
       )}
-      <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "1%" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+      <Paper
+        sx={{
+          width: "100%",
+          overflow: "hidden",
+          marginTop: "1%",
+          boxShadow: "0px 0px 8px rgb(200,200,200)",
+        }}
+      >
+        <TableContainer sx={{ maxHeight: 600 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -173,7 +199,12 @@ const CategoryTable = () => {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    sx={{
+                      minWidth: column.minWidth,
+                      fontSize: "1.16rem",
+                      textTransform: "capitalize",
+                      letterSpacing: "0.5px",
+                    }}
                   >
                     {column.label}
                   </TableCell>
@@ -211,9 +242,12 @@ const CategoryTable = () => {
                         }
                         return (
                           <TableCell
-                            style={{ color: Text_Color[column.id] }}
+                            style={{
+                              color: Text_Color[column.id] || "rgb(80,80,80)",
+                            }}
                             key={column.id}
                             align={column.align}
+                            sx={{ fontSize: "1rem" }}
                           >
                             {column.format && typeof value === "number"
                               ? column.format(value)

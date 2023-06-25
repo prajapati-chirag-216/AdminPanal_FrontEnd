@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, { useRef } from "react";
 import {
   Button,
   TextField,
@@ -6,14 +6,11 @@ import {
   MenuItem,
   useMediaQuery,
 } from "@mui/material";
-import {
-  updateOrder,
-} from "../../../utils/api";
-import  '../OrderForm/orderForm.styles.scss'
+import { updateOrder } from "../../../utils/api";
+import "../OrderForm/orderForm.styles.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
 import { orderActions } from "../../../store/order-slice";
-
 
 const FINAL_BTN_ACTION = {
   addProduct: "Create Product",
@@ -24,19 +21,14 @@ const UpdateOrderForm = ({ action }) => {
   const dispatch = useDispatch();
   const updateId = useSelector((state) => state.order.updateOrderId);
 
-
   const matches = useMediaQuery("(max-width:700px)");
   const deliverystatusRef = useRef();
-
-
-
 
   const handleProductAction = async (event) => {
     event.preventDefault();
 
-    
     const orderDetails = {
-      deliveryStatus:deliverystatusRef.current.value
+      deliveryStatus: deliverystatusRef.current.value,
     };
 
     if (action === "update") {
@@ -67,20 +59,18 @@ const UpdateOrderForm = ({ action }) => {
     }
   };
 
-
   return (
     <div>
       <div>
         <Typography variant={matches ? "h5" : "h4"} fontWeight="500">
-            Update Order
+          Update Order
         </Typography>
       </div>
       <form
-         className="update-form"
+        className="update-form"
         onSubmit={handleProductAction}
         method="post"
       >
-
         <div>
           <TextField
             inputRef={deliverystatusRef}
@@ -91,7 +81,7 @@ const UpdateOrderForm = ({ action }) => {
             defaultValue="Pending"
             fullWidth={true}
           >
-            {["Pending", "Shipped",'Out For Delivery'].map((option, index) => (
+            {["Pending", "Shipped", "Out For Delivery"].map((option, index) => (
               <MenuItem key={index} value={option}>
                 {option}
               </MenuItem>
@@ -116,6 +106,5 @@ const UpdateOrderForm = ({ action }) => {
     </div>
   );
 };
-
 
 export default UpdateOrderForm;

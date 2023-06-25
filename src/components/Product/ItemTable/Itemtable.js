@@ -14,60 +14,61 @@ import { useDispatch, useSelector } from "react-redux";
 import SimpleModal from "../../Dekstop/Modal/Modal";
 import AddProductForm from "../Form/AddProductForm";
 import { deleteProduct, getProducts } from "../../../utils/api";
-import { IconButton } from "@mui/material";
+import { Container, IconButton } from "@mui/material";
 import { productActions } from "../../../store/product-slice";
 import { uiActions } from "../../../store/ui-slice";
+import LoadingSpinner from "../../Dekstop/UI/LoadingSpinner";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 80 },
-  { id: "description", label: "description", minWidth: 80 },
+  { id: "description", label: "description", minWidth: 250, maxWidth: 300 },
   {
     id: "icon",
     label: "icon",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "category",
     label: "category",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "status",
     label: "status",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "price",
     label: "price",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "createdAt",
     label: "createdAt",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "updatedAt",
     label: "updatedAt",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "Delete",
     label: "Delete",
     minWidth: 80,
-    align: "right",
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
@@ -94,7 +95,7 @@ const ItemTable = () => {
     setRows(
       productData?.map((product) => ({
         name: product.name,
-        description: product.description.split(".")[0],
+        description: product.description.split(".")[0] + "..",
         icon: (
           <img
             width="50px"
@@ -190,7 +191,18 @@ const ItemTable = () => {
     status: "green",
   };
 
-  if (!rows) return <div>Loading...</div>;
+  if (!rows)
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        <LoadingSpinner />
+      </Container>
+    );
   return (
     <Fragment>
       {showModel && (
@@ -198,8 +210,15 @@ const ItemTable = () => {
           <AddProductForm action="update" />
         </SimpleModal>
       )}
-      <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "1%" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+      <Paper
+        sx={{
+          width: "100%",
+          overflow: "hidden",
+          marginTop: "1%",
+          boxShadow: "0px 0px 8px rgb(200,200,200)",
+        }}
+      >
+        <TableContainer sx={{ maxHeight: 600 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -207,7 +226,14 @@ const ItemTable = () => {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{
+                      minWidth: column.minWidth,
+                      fontSize: "1.1rem",
+                      letterSpacing: "0.5px",
+                      paddingTop: "1.5rem",
+                      paddingBottom: "1.5rem",
+                      textTransform: "capitalize",
+                    }}
                   >
                     {column.label}
                   </TableCell>
@@ -245,7 +271,11 @@ const ItemTable = () => {
                         }
                         return (
                           <TableCell
-                            style={{ color: Text_Color[column.id] }}
+                            style={{
+                              color: Text_Color[column.id] || "rgb(80,80,80)",
+                              maxWidth: "15rem",
+                              fontSize: "1rem",
+                            }}
                             key={column.id}
                             align={column.align}
                           >

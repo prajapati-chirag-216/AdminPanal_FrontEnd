@@ -7,6 +7,7 @@ import StatusButton from "../Dekstop/StatusButton/StatusButton";
 import CategoryTable from "./CategoryTable/CategoryTable";
 import "../Category/AddCategory.styles.scss";
 import { uiActions } from "../../store/ui-slice";
+import { Box, Typography } from "@mui/material";
 
 const AddCategory = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,22 @@ const AddCategory = () => {
         {fetchCategoryData.status ? fetchCategoryData.activity : "Add Category"}
       </StatusButton>
 
+      <Typography
+        align="center"
+        sx={{
+          letterSpacing: "1px",
+          alignSelf: "center",
+          position: "fixed",
+          fontSize: "1.6rem",
+          marginTop: "0.5rem",
+          color: "rgb(80,80,80)",
+          width: "14rem",
+          textTransform: "uppercase",
+          borderBottom: "1px solid rgb(80,80,80)",
+        }}
+      >
+        Categories
+      </Typography>
       <div className="itemTableContanier">
         <CategoryTable />
       </div>
