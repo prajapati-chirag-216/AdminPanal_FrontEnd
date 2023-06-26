@@ -9,67 +9,44 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import TableRow from "@mui/material/TableRow";
 import { useDispatch, useSelector } from "react-redux";
 import SimpleModal from "../../Dekstop/Modal/Modal";
-import AddProductForm from "../Form/AddProductForm";
-import { deleteProduct, getProducts } from "../../../utils/api";
-import { Container, IconButton } from "@mui/material";
-import { productActions } from "../../../store/product-slice";
+import AddAdminForm from "../Form/AddAdminForm";
+import { deleteAdmin, getAdmins } from "../../../utils/api";
+import { Container, IconButton, Typography } from "@mui/material";
+import { adminActions } from "../../../store/admin-slice";
 import { uiActions } from "../../../store/ui-slice";
 import LoadingSpinner from "../../Dekstop/UI/LoadingSpinner";
-
+import roleTypes from "../../../utils/roles/roleTypes";
 const columns = [
-  { id: "name", label: "Name", minWidth: 80 },
-  { id: "description", label: "description", minWidth: 250, maxWidth: 300 },
+  { id: "name", label: "Name", minWidth: 160 },
   {
-    id: "icon",
-    label: "icon",
-    minWidth: 80,
+    id: "email",
+    label: "email",
+    minWidth: 200,
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "category",
-    label: "category",
-    minWidth: 80,
+    id: "role",
+    label: "role",
+    minWidth: 100,
     align: "left",
     format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "status",
-    label: "status",
-    minWidth: 80,
-    align: "left",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "price",
-    label: "price",
-    minWidth: 80,
-    align: "left",
-    format: (value) => value.toFixed(2),
   },
   {
     id: "createdAt",
     label: "createdAt",
-    minWidth: 80,
+    minWidth: 100,
     align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "updatedAt",
     label: "updatedAt",
-    minWidth: 80,
+    minWidth: 100,
     align: "left",
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id:'Reviews',
-    label: "Reviews",
-    minWidth:80,
-    align:'left',
     format: (value) => value.toFixed(2),
   },
   {
@@ -88,59 +65,43 @@ const columns = [
   },
 ];
 
-const ItemTable = () => {
+const AdminTable = () => {
   const dispatch = useDispatch();
-  const productData = useSelector((state) => state.product.products);
+  const adminData = useSelector((state) => state.admin.admins);
 
-  const fetchProductData = useSelector(
-    (state) => state.product.fetchProductData
-  );
+  const fetchAdminData = useSelector((state) => state.admin.fetchAdminData);
   const showModel = useSelector((state) => state.ui.updateModelState);
 
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
     setRows(
-      productData?.map((product) => ({
-        name: product.name,
-        description: product.description.split(".")[0] + "..",
-        icon: (
-          <img
-            width="50px"
-            height="50px"
-            style={{ objectFit: "cover" }}
-            src={product.image[0]}
-            alt="loading.."
-          />
-        ),
-        category: product.category.name,
-        status: product.status,
-        price: product.price,
-        createdAt: new Date(product.createdAt).toLocaleString(),
-        updatedAt: new Date(product.updatedAt).toLocaleString(),
-        _id: product._id,
+      adminData?.map((admin) => ({
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+        createdAt: new Date(admin.createdAt).toLocaleString(),
+        updatedAt: new Date(admin.updatedAt).toLocaleString(),
       }))
     );
-  }, [productData]);
+  }, [adminData]);
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        const data = await getProducts();
-        dispatch(productActions.setProducts(data));
+        const data = await getAdmins();
+        dispatch(adminActions.setAdmins(data));
       } catch (err) {
         console.error(err);
       }
     };
     try {
-      if (
-        !fetchProductData.status ||
-        fetchProductData.activity === "Fetching.."
-      ) {
+      if (!fetchAdminData.status || fetchAdminData.activity === "Fetching..") {
         fetch()
-          .then((res) =>
+          .then(() =>
             dispatch(
-              productActions.setFetchProductData({
+              adminActions.setFetchAdminData({
                 status: false,
                 activity: "None",
               })
@@ -151,36 +112,27 @@ const ItemTable = () => {
     } catch (err) {
       throw err;
     }
-  }, [fetchProductData]);
-
-  const handleReviewsChange = async(id,name) =>{
-    if (!id) return;
-    
-    console.log(name,'ef')
-      dispatch(uiActions.setProductName(name))
-      window.open(`/admin/reviews/${id}`)
-       
-  }
+  }, [fetchAdminData]);
 
   const handleDeleteChange = async (id) => {
     if (!id) return;
     dispatch(
-      productActions.setFetchProductData({
+      adminActions.setFetchAdminData({
         status: true,
         activity: "Deleting..",
       })
     );
     try {
-      await deleteProduct(id);
+      await deleteAdmin(id);
       dispatch(
-        productActions.setFetchProductData({
+        adminActions.setFetchAdminData({
           status: false,
           activity: "Deleting..",
         })
       );
     } catch (err) {
       dispatch(
-        productActions.setFetchProductData({
+        adminActions.setFetchAdminData({
           status: false,
           activity: "Deleting..",
         })
@@ -190,7 +142,7 @@ const ItemTable = () => {
   };
 
   const handleUpdateChange = (id) => {
-    dispatch(productActions.setUpdateProductId(id));
+    dispatch(adminActions.setUpdateAdminId(id));
     dispatch(uiActions.setUpdateModelState(true));
   };
 
@@ -230,7 +182,7 @@ const ItemTable = () => {
     <Fragment>
       {showModel && (
         <SimpleModal onOpen={showModel} onClose={closeModelHandler}>
-          <AddProductForm action="update" />
+          <AddAdminForm action="update" />
         </SimpleModal>
       )}
       <Paper
@@ -274,31 +226,39 @@ const ItemTable = () => {
                         if (column.id === "Delete") {
                           return (
                             <TableCell key={column.id} align={column.align}>
-                              <IconButton
-                                onClick={handleDeleteChange.bind(null, row._id)}
-                              >
-                                <DeleteForeverIcon />
-                              </IconButton>
+                              {row["role"] === roleTypes.SUPER_ADMIN ? (
+                                <Typography sx={{ color: "gray" }}>
+                                  Restricted
+                                </Typography>
+                              ) : (
+                                <IconButton
+                                  onClick={handleDeleteChange.bind(
+                                    null,
+                                    row._id
+                                  )}
+                                >
+                                  <DeleteForeverIcon />
+                                </IconButton>
+                              )}
                             </TableCell>
                           );
                         } else if (column.id === "Update") {
                           return (
                             <TableCell key={column.id} align={column.align}>
-                              <IconButton
-                                onClick={handleUpdateChange.bind(null, row._id)}
-                              >
-                                <BorderColorIcon />
-                              </IconButton>
-                            </TableCell>
-                          );
-                        }else if (column.id === "Reviews") {
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              <IconButton
-                                onClick={handleReviewsChange.bind(null, row._id,row.name)}
-                              >
-                                <VisibilityIcon />
-                              </IconButton>
+                              {row["role"] === roleTypes.SUPER_ADMIN ? (
+                                <Typography sx={{ color: "gray" }}>
+                                  Restricted
+                                </Typography>
+                              ) : (
+                                <IconButton
+                                  onClick={handleUpdateChange.bind(
+                                    null,
+                                    row._id
+                                  )}
+                                >
+                                  <BorderColorIcon />
+                                </IconButton>
+                              )}
                             </TableCell>
                           );
                         }
@@ -338,4 +298,4 @@ const ItemTable = () => {
   );
 };
 
-export default memo(ItemTable);
+export default memo(AdminTable);

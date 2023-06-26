@@ -19,12 +19,13 @@ import { logoutAdmin } from "../../../utils/api";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
 import { authActions } from "../../../store/auth-slice";
+import { useNavigate } from "react-router-dom";
 
 const MainNavigation = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -51,7 +52,14 @@ const MainNavigation = () => {
           message: "LoggedOut Successfully.",
         })
       );
-      dispatch(authActions.logout());
+      navigate("/login");
+      dispatch(
+        uiActions.setSnackBar({
+          status: true,
+          message: "LogedOut successfully",
+          severity: "success",
+        })
+      );
     } catch (err) {
       throw err;
     }
@@ -135,7 +143,7 @@ const MainNavigation = () => {
             component="div"
             sx={{ alignSelf: "center", display: { xs: "none", sm: "block" } }}
           >
-            Shoppee Admin Panel
+            shopZee Admin Panel
           </Typography>
           {/* <Search>
             <SearchIconWrapper>

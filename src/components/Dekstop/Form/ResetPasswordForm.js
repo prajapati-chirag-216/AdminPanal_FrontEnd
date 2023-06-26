@@ -33,28 +33,28 @@ const ResetPasswordForm = () => {
       return document.getElementById("password").focus();
     }
   };
-  const navigate = useNavigate();
-  const actionData = useActionData();
+  // const navigate = useNavigate();
+  // const actionData = useActionData();
   const params = useParams();
 
-  useEffect(() => {
-    if (actionData && actionData.response.status === 502) {
-      setShowNotification(true);
-      setTimeout(() => {
-        setShowNotification(false);
-      }, 4000);
-      document.getElementById("password").focus();
-    }
-    // eslint-disable-next-line
-  }, [actionData]);
+  // useEffect(() => {
+  //   if (actionData && actionData.response.status === 502) {
+  //     setShowNotification(true);
+  //     setTimeout(() => {
+  //       setShowNotification(false);
+  //     }, 4000);
+  //     document.getElementById("password").focus();
+  //   }
+  //   // eslint-disable-next-line
+  // }, [actionData]);
   return (
     <Fragment>
-      {showNotification && (
+      {/* {showNotification && (
         <Notification
           status="invalid"
           message={actionData.response.data.message}
         />
-      )}
+      )} */}
       <div className={classes["action-div"]}>
         <Typography
           fontSize="2rem"
@@ -90,7 +90,7 @@ const ResetPasswordForm = () => {
               padding: "0.7rem",
             }}
             onClick={!passwordIsValid ? validateFormHandler : () => {}}
-            disabled={showNotification}
+            // disabled={showNotification}
           >
             Reset
           </Button>
@@ -110,10 +110,10 @@ export async function action({ request, params }) {
   try {
     response = await resetPassword(adminData);
   } catch (err) {
-    if (err.response && err.response.status === 502) {
-      return err;
-    }
-    throw err;
+    // if (err.response && err.response.status === 502) {
+    // }
+    return err;
+    // throw err;
   }
   return redirect("/login");
 }

@@ -1,11 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Button, TextField, Typography, useMediaQuery } from "@mui/material";
 import AddPhotoAlternate from "@mui/icons-material/AddPhotoAlternate";
-import {
-  addCategory,
-  updateCategories,
-  updateProduct,
-} from "../../../utils/api";
+import { addCategory, updateCategory, updateProduct } from "../../../utils/api";
 import classes from "./AddCategoryForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { categoryActions } from "../../../store/category-slice";
@@ -57,6 +53,12 @@ const AddCategoryForm = ({ action }) => {
           })
         );
       } catch (err) {
+        dispatch(
+          categoryActions.setFetchCategoryData({
+            status: false,
+            activity: "Adding..",
+          })
+        );
         throw err;
       }
     } else if (action === "update") {
@@ -74,7 +76,7 @@ const AddCategoryForm = ({ action }) => {
       );
       try {
         dispatch(uiActions.setUpdateModelState(false));
-        await updateCategories(updateObj, updateId);
+        await updateCategory(updateObj, updateId);
         dispatch(
           categoryActions.setFetchCategoryData({
             status: false,
@@ -82,6 +84,12 @@ const AddCategoryForm = ({ action }) => {
           })
         );
       } catch (err) {
+        dispatch(
+          categoryActions.setFetchCategoryData({
+            status: false,
+            activity: "Updating..",
+          })
+        );
         throw err;
       }
     }

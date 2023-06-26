@@ -54,6 +54,12 @@ const UpdateOrderForm = ({ action }) => {
           })
         );
       } catch (err) {
+        dispatch(
+          orderActions.setFetchOrderData({
+            status: false,
+            activity: "Updating..",
+          })
+        );
         throw err;
       }
     }

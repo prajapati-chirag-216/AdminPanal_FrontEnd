@@ -7,6 +7,10 @@ const initialState = {
   updateModelState: false,
   productName:localStorage.getItem('productName')||'',
   ReviewChange:false
+  snackBar: {
+    status: false,
+    message: "",
+  },
 };
 
 const uiSlice = createSlice({
@@ -27,15 +31,18 @@ const uiSlice = createSlice({
     setAddModelState(state, action) {
       state.addModelState = action.payload;
     },
-    setReviewChange(state,action){
-      state.ReviewChange = action.payload
+    setReviewChange(state, action) {
+      state.ReviewChange = action.payload;
     },
-  setProductName(state,action){
-      localStorage.setItem('productName',action.payload)
-    state.productName = action.payload
-  },
+    setProductName(state, action) {
+      localStorage.setItem("productName", action.payload);
+      state.productName = action.payload;
+    },
     setUpdateModelState(state, action) {
       state.updateModelState = action.payload;
+    },
+    setSnackBar(state, action) {
+      state.snackBar = action.payload;
     },
   },
 });

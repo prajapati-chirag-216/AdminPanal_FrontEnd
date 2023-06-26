@@ -30,24 +30,29 @@ const ForgotPasswordForm = () => {
     }
   };
   const actionData = useActionData();
+  // useEffect(() => {
+  //   if (actionData && actionData.response.status === 502) {
+  //     setShowNotification(true);
+  //     setTimeout(() => {
+  //       setShowNotification(false);
+  //     }, 4000);
+  //     document.getElementById("email").focus();
+  //   }
+  //   // eslint-disable-next-line
+  // }, [actionData]);
   useEffect(() => {
-    if (actionData && actionData.response.status === 502) {
-      setShowNotification(true);
-      setTimeout(() => {
-        setShowNotification(false);
-      }, 4000);
+    if (actionData?.response?.status === 401) {
       document.getElementById("email").focus();
     }
-    // eslint-disable-next-line
   }, [actionData]);
   return (
     <Fragment>
-      {showNotification && (
+      {/* {showNotification && (
         <Notification
           message={actionData.response.data.message}
           status="invalid"
         />
-      )}
+      )} */}
       <div className={classes["action-div"]}>
         <Typography
           fontSize="2rem"
@@ -70,7 +75,7 @@ const ForgotPasswordForm = () => {
             value={emailState.value}
             onChange={emailChangeHandler}
             onBlur={validateEmailHandler}
-            // autoComplete="off"
+            autoComplete="off"
             error={emailIsValid === false ? true : false}
           />
           <Button
@@ -83,7 +88,7 @@ const ForgotPasswordForm = () => {
               padding: "0.7rem",
             }}
             onClick={!emailIsValid ? validateFormHandler : () => {}}
-            disabled={showNotification}
+            // disabled={showNotification}
           >
             Forgot Password
           </Button>
@@ -102,10 +107,11 @@ export async function action({ request }) {
   try {
     response = await forgotPassword(adminData);
   } catch (err) {
-    if (err.response && err.response.status === 502) {
-      return err;
-    }
-    throw err;
+    // if (err.response && err.response.status === 502) {
+    //   return err;
+    // }
+    // throw err;
+    return err;
   }
   store.dispatch(uiActions.setSuccess(true));
   return redirect("/success");

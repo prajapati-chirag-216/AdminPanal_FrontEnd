@@ -4,12 +4,17 @@ import SliderImages from "../SliderImages/SliderImages";
 import SimpleContainer from "../UI/Container";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { deleteDisplayImage, fetchDisplayImage } from "../../../utils/api";
+import {
+  deleteDisplayImage,
+  fetchAdminProfile,
+  fetchDisplayImage,
+} from "../../../utils/api";
 import StatusButton from "../StatusButton/StatusButton";
 import SimpleModal from "../Modal/Modal";
 import AddDisplayForm from "./Form/AddDisplayForm";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
+import roleTypes from "../../../utils/roles/roleTypes";
 
 const Display = () => {
   const matches = useMediaQuery("(max-width:700px)");
@@ -21,6 +26,7 @@ const Display = () => {
     activity: "Fetching..",
   });
   const [fetchData, setFetchData] = useState(true);
+  const [disable, setDisable] = useState(false);
 
   const deleteImgHandler = async (id) => {
     setIsLoading({ status: true, activity: "Deleteing.." });
@@ -28,6 +34,7 @@ const Display = () => {
       await deleteDisplayImage(id);
       setFetchData(true);
     } catch (err) {
+      setIsLoading({ status: false, activity: "None" });
       throw err;
     }
   };
@@ -46,6 +53,14 @@ const Display = () => {
 
   useEffect(() => {
     if (fetchData) {
+      const fetchProfile = async () => {
+        try {
+          const res = await fetchAdminProfile();
+          return res;
+        } catch (err) {
+          throw err;
+        }
+      };
       const fetchData = async () => {
         try {
           const res = await fetchDisplayImage();
@@ -57,6 +72,11 @@ const Display = () => {
       fetchData().then(() => {
         setIsLoading({ status: false, activity: "None" });
         setFetchData(false);
+      });
+      fetchProfile().then((res) => {
+        if (res?.adminProfile?.role == roleTypes.ADMIN) {
+          setDisable(true);
+        }
       });
     }
   }, [fetchData]);
@@ -83,6 +103,7 @@ const Display = () => {
         isLoading={isLoading}
         icon={<PhotoCamera />}
         onClick={openModalHandler}
+        disable={disable}
       >
         {isLoading.status ? isLoading.activity : "Upload"}
       </StatusButton>

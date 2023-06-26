@@ -185,6 +185,12 @@ const OrderTable = () => {
         })
       );
     } catch (err) {
+      dispatch(
+        orderActions.setFetchOrderData({
+          status: false,
+          activity: "Deleting..",
+        })
+      );
       throw err;
     }
   };

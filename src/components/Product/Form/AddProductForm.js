@@ -11,7 +11,7 @@ import AddPhotoAlternate from "@mui/icons-material/AddPhotoAlternate";
 import {
   addProduct,
   fetchCategories,
-  updateCategories,
+  updateCategory,
   updateProduct,
 } from "../../../utils/api";
 import classes from "./AddProductForm.module.css";
@@ -92,6 +92,12 @@ const AddProductForm = ({ action }) => {
           })
         );
       } catch (err) {
+        dispatch(
+          productActions.setFetchProductData({
+            status: false,
+            activity: "Adding..",
+          })
+        );
         throw err;
       }
     } else if (action === "update") {
@@ -117,6 +123,12 @@ const AddProductForm = ({ action }) => {
           })
         );
       } catch (err) {
+        dispatch(
+          productActions.setFetchProductData({
+            status: false,
+            activity: "Updating..",
+          })
+        );
         throw err;
       }
     }
@@ -230,7 +242,7 @@ const AddProductForm = ({ action }) => {
                   fullWidth={true}
                   required={action === "add"}
                   select
-                  defaultValue={categories[0]._id}
+                  defaultValue={categories[0]?._id}
                 >
                   {categories.map((category) => (
                     <MenuItem key={category._id} value={category._id}>
