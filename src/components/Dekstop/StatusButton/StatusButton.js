@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useMediaQuery } from "@mui/material";
 
@@ -25,7 +25,7 @@ const StatusButton = (props) => {
           backgroundColor: "black",
         },
       }}
-      disabled={props.isLoading.status}
+      disabled={props.isLoading.status || props.disable}
     >
       {props.children}
     </LoadingButton>

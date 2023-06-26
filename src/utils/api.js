@@ -1,197 +1,139 @@
-import axios from "axios";
-
-const BACKAND_DOMAIN = "http://localhost:8000";
-
-export async function loginAdmin(userData) {
+import AxiosInstance from "./AxiosInstance/AxiosInstance";
+import { uploadToCloud } from "./function";
+export async function signupAdmin(adminData) {
+  const config = {
+    method: "POST",
+    url: `/admin/signup`,
+    data: adminData,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+}
+export async function fetchAdminProfile() {
   try {
-    const response = await axios.post(
-      `${BACKAND_DOMAIN}/login`,
-      {
-        ...userData,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Unable to Login." });
-    }
-    return data;
+    const config = {
+      url: `/admin/profile`,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
   } catch (err) {
     throw err;
   }
 }
+
+export async function loginAdmin(adminData) {
+  const config = {
+    method: "POST",
+    url: `/admin/login`,
+    data: adminData,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+}
+
 export async function logoutAdmin() {
-  try {
-    const response = await axios.post(
-      `${BACKAND_DOMAIN}/logout`,
-      {},
-      {
-        withCredentials: true,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Unable to Logout." });
-    }
-    return data;
-  } catch (err) {
-    throw err;
-  }
+  const config = {
+    method: "POST",
+    url: `/admin/logout`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
 }
-export async function forgotPassword(userData) {
-  try {
-    const response = await axios.post(`${BACKAND_DOMAIN}/forgotPassword`, {
-      ...userData,
-    });
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Somthing went wrong." });
-    }
-    return data;
-  } catch (err) {
-    throw err;
-  }
+
+export async function forgotPassword(adminData) {
+  const config = {
+    method: "POST",
+    url: `/admin/forgotPassword`,
+    data: adminData,
+  };
+  const response = await AxiosInstance(config);
+  return response;
 }
-export async function resetPassword(userData) {
-  try {
-    const response = await axios.post(
-      `${BACKAND_DOMAIN}/resetPassword/${userData.id}`,
-      {
-        password: userData.password,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Unable to reset password." });
-    }
-    return data;
-  } catch (err) {
-    throw err;
-  }
+export async function resetPassword(adminData) {
+  const config = {
+    method: "POST",
+    url: `/admin/resetPassword/${adminData.id}`,
+    data: { password: adminData.password },
+  };
+  const response = await AxiosInstance(config);
+  return response;
 }
 export async function addDisplayImage(displayData) {
   try {
     const imageLink = await uploadToCloud(displayData.image);
-    const response = await axios.post(
-      `${BACKAND_DOMAIN}/admin/addDisplayImage`,
-      { ...displayData, image: imageLink },
-      {
-        withCredentials: true,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Unable to Login." });
-    }
-    return data;
+    const config = {
+      method: "POST",
+      url: `/addDisplayImage`,
+      data: { ...displayData, image: imageLink },
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
   } catch (err) {
     throw err;
   }
 }
 export async function fetchDisplayImage() {
-  try {
-    const response = await axios.get(
-      `${BACKAND_DOMAIN}/admin/fetchDisplayImage`,
-      {
-        withCredentials: true,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Unable to Login." });
-    }
-    return data;
-  } catch (err) {
-    throw err;
-  }
-}
-export async function deleteDisplayImage(id) {
-  try {
-    const response = await axios.delete(
-      `${BACKAND_DOMAIN}/admin/deleteDisplayImage/${id}`,
-      // {},
-      {
-        withCredentials: true,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Unable to Login." });
-    }
-    return data;
-  } catch (err) {
-    throw err;
-  }
+  const config = {
+    url: `/fetchDisplayImage`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
 }
 
-// ADDED---------------------------------------------------
+export async function deleteDisplayImage(id) {
+  const config = {
+    method: "DELETE",
+    url: `/deleteDisplayImage/${id}`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+}
 
 export const getProducts = async () => {
-  const productdata = await fetch(`${BACKAND_DOMAIN}/getproduct`);
-
-  const data = await productdata.json();
-  return data;
-};
-
-const uploadToCloud = async (image) => {
-  const formData = new FormData();
-
-  formData.append("file", image);
-  formData.append("upload_preset", "AddImage");
-  formData.append("cloud_name", "dzpuekeql");
-
-  const result = await fetch(
-    "https://api.cloudinary.com/v1_1/dzpuekeql/image/upload",
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
-  const data = await result.json();
-
-  return data.secure_url;
+  const config = {
+    url: `/getproducts`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
 };
 
 export const addProduct = async (productObj) => {
-  const response = productObj.image.map(async (image) => {
-    return await uploadToCloud(image);
-  });
-
-  const result = await Promise.all(response);
-
-  productObj.image = result;
-
   try {
-    const response = await axios.post(
-      `${BACKAND_DOMAIN}/addproduct`,
-      productObj,
-      {
-        withCredentials: true,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "Created") {
-      throw new Error({ message: data.message || "Unable to Login." });
-    }
-    return data;
+    const result = productObj.image.map(async (image) => {
+      return await uploadToCloud(image);
+    });
+    const finalResult = await Promise.all(result);
+    productObj.image = finalResult;
+
+    const config = {
+      method: "POST",
+      url: `/addproduct`,
+      data: productObj,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
   } catch (err) {
     throw err;
   }
 };
 
 export const deleteProduct = async (id) => {
-  try {
-    const data = await fetch(`${BACKAND_DOMAIN}/deleteproduct/${id}`, {
-      method: "DELETE",
-    });
-
-    const res = await data.json();
-    return res;
-  } catch (err) {
-    throw err;
-  }
+  const config = {
+    method: "DELETE",
+    url: `/deleteproduct/${id}`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
 };
 
 export const updateProduct = async (product, id) => {
@@ -202,175 +144,191 @@ export const updateProduct = async (product, id) => {
       const response = image.map(async (image) => {
         return await uploadToCloud(image);
       });
-
       const result = await Promise.all(response);
-
       newProduct.image = result;
     }
-
-    const { data } = await axios.patch(
-      `${BACKAND_DOMAIN}/updateproduct/${id}`,
-      newProduct
-    );
-
-    return data;
+    const config = {
+      method: "PATCH",
+      url: `/updateproduct/${id}`,
+      data: newProduct,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
   } catch (err) {
     throw err;
   }
 };
-
 export async function addCategory(catData) {
-  const imageLink = await uploadToCloud(catData.image);
-
-  catData.image = imageLink;
-
   try {
-    const response = await axios.post(
-      `${BACKAND_DOMAIN}/addCategory`,
-      {
-        ...catData,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-    const data = response.data;
-    if (response.statusText !== "OK") {
-      throw new Error({ message: data.message || "Unable to Login." });
-    }
-    return data;
+    const imageLink = await uploadToCloud(catData.image);
+    catData.image = imageLink;
+    const config = {
+      method: "POST",
+      url: `/addCategory`,
+      data: catData,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
   } catch (err) {
     throw err;
   }
 }
 
-export const updateCategories = async (categoryObj, id) => {
+export const updateCategory = async (categoryObj, id) => {
   const { image, ...newCategoryObj } = categoryObj;
 
-  if ("image" in categoryObj) {
-    const imageLink = await uploadToCloud(image);
-
-    newCategoryObj.image = imageLink;
-  }
-
   try {
-    const { data } = await axios.patch(
-      `${BACKAND_DOMAIN}/updatecategory/${id}`,
-      newCategoryObj
-    );
-    return data;
-  } catch (err) {}
+    if ("image" in categoryObj) {
+      const imageLink = await uploadToCloud(image);
+      newCategoryObj.image = imageLink;
+    }
+    const config = {
+      method: "PATCH",
+      url: `/updatecategory/${id}`,
+      data: newCategoryObj,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const fetchCategories = async () => {
-  try {
-    const response = await axios.get(`${BACKAND_DOMAIN}/fetchCategories`, {
-      withCredentials: true,
-    });
-    const data = response.data;
-
-    return data;
-  } catch (err) {
-    throw err;
-  }
+  const config = {
+    url: `/fetchCategories`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
 };
+
 export const deleteCategory = async (id) => {
+  const config = {
+    method: "DELETE",
+    url: `/deleteCategory/${id}`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
+export const fetchOrders = async () => {
+  const config = {
+    url: `/getAllOrders`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
+export const updateOrder = async (updateObj, updateId) => {
   try {
-    const response = await axios.delete(
-      `${BACKAND_DOMAIN}/deleteCategory/${id}`,
-      { withCredentials: true }
-    );
-    const data = response.data;
-    return data;
+    const config = {
+      method: "PATCH",
+      url: `/updateOrderStatus/${updateId}`,
+      data: updateObj,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
   } catch (err) {
     throw err;
   }
 };
 
+export const getOrderById = async (id) => {
+  const config = {
+    url: `/getOrder/${id}`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
 
-export const fetchOrders = async() =>{
+export const deleteOrder = async (id) => {
+  const config = {
+    method: "DELETE",
+    url: `/deleteOrder/${id}`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
 
+export const getTodaysOrders = async () => {
+  const config = {
+    url: `/getTodaysOrders`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
 
-     try{
-        const response = await axios.get(`${BACKAND_DOMAIN}/getAllOrders`)
+export const getUsers = async () => {
+  const config = {
+    url: `/getAllUsers`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
 
-        const data = await response.data
+export const getAccessToken = async () => {
+  try {
+    const config = {
+      url: "/admin/getAccessToken",
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};
 
-         return data
-     }catch(err){
-        throw err
-     }
+export const getAdmins = async () => {
+  const config = {
+    url: `/getAllAdmins`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
+
+export async function addAdmin(adminData) {
+  const config = {
+    method: "POST",
+    url: `/admin/addAdmin`,
+    data: adminData,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
 }
 
-export const updateOrder = async(updateObj, updateId) =>{
+export const deleteAdmin = async (id) => {
+  const config = {
+    method: "DELETE",
+    url: `/deleteAdmin/${id}`,
+    withCredentials: true,
+  };
+  const response = await AxiosInstance(config);
+  return response;
+};
 
-     try{
-         const response = await axios.patch(`${BACKAND_DOMAIN}/updateOrderStatus/${updateId}`,updateObj);
-
-         const data = await response.data;
-
-         console.log(data,'iuhu')
-
-         return data
-     }catch(err){
-      throw err
-   }
-}
-
-
-export const getOrderById = async(id) =>{
-
-     try{
-       const response = await axios.get(`${BACKAND_DOMAIN}/getOrderById/${id}`);
-
-       const data = await response.data
-
-       return data
-     }catch(err){
-      throw err
-   }
-}
-
-
-export const deleteOrder = async(id) =>{
-
-     try{
-       const response = await axios.delete(`${BACKAND_DOMAIN}/deleteOrder/${id}`);
-
-       const data = await response.data
-
-       return data
-     }catch(err){
-      throw err
-   }
-}
-
-
-export const getTodaysOrders = async() =>{
-
-      try{
-          const response = await axios.get(`${BACKAND_DOMAIN}/getTodaysOrders`);
-
-          const data = await response.data
-
-          return data
-      }catch(err){
-         throw err;
-      }
-}
-
-
-export const getUsers = async() =>{
-
-     try{
-        const response = await axios.get(`${BACKAND_DOMAIN}/getAllUsers`);
-
-        
-        const data = await response.data
-        
-        console.log(data)
-        return data
-     }catch(err){
-      throw err;
-   }
-}
+export const updateAdmin = async (newObj, id) => {
+  try {
+    const config = {
+      method: "PATCH",
+      url: `/updateAdmin/${id}`,
+      data: newObj,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};

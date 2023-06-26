@@ -106,8 +106,6 @@ const OrderTable = () => {
 
   const orderData = useSelector((state) => state.order.orders);
 
-  console.log(orderData);
-
   const fetchOrderData = useSelector((state) => state.order.fetchOrderData);
   const showModel = useSelector((state) => state.ui.updateModelState);
 
@@ -177,6 +175,12 @@ const OrderTable = () => {
         })
       );
     } catch (err) {
+      dispatch(
+        orderActions.setFetchOrderData({
+          status: false,
+          activity: "Deleting..",
+        })
+      );
       throw err;
     }
   };

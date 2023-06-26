@@ -5,6 +5,10 @@ const initialState = {
   success: false,
   addModelState: false,
   updateModelState: false,
+  snackBar: {
+    status: false,
+    message: "",
+  },
 };
 
 const uiSlice = createSlice({
@@ -27,6 +31,9 @@ const uiSlice = createSlice({
     },
     setUpdateModelState(state, action) {
       state.updateModelState = action.payload;
+    },
+    setSnackBar(state, action) {
+      state.snackBar = action.payload;
     },
   },
 });

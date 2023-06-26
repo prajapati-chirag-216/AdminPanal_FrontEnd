@@ -134,12 +134,17 @@ const CategoryTable = () => {
         })
       );
     } catch (err) {
+      dispatch(
+        categoryActions.setFetchCategoryData({
+          status: false,
+          activity: "Deleting..",
+        })
+      );
       throw err;
     }
   };
 
   const handleUpdateChange = (id) => {
-    console.log(id, "jeh");
     dispatch(categoryActions.setUpdateCategoryId(id));
     dispatch(uiActions.setUpdateModelState(true));
   };

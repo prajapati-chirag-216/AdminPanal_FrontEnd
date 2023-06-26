@@ -85,11 +85,7 @@ const OrdersTable = () => {
     };
 
     run();
-
-    console.log(todayOrderObj);
   }, []);
-
-  console.log(todayOrderObj);
 
   useEffect(() => {
     setRows(

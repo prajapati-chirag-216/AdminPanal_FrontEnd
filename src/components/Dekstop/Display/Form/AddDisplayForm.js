@@ -1,14 +1,19 @@
-import React, { useState, useRef } from "react";
-import { Button, TextField, Typography, useMediaQuery,MenuItem } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Button,
+  TextField,
+  Typography,
+  useMediaQuery,
+  MenuItem,
+} from "@mui/material";
 import { Await, useLoaderData } from "react-router-dom";
 import AddPhotoAlternate from "@mui/icons-material/AddPhotoAlternate";
 import { Suspense } from "react";
 import classes from "./AddDisplayForm.module.css";
 import { useDispatch } from "react-redux";
-import { addDisplayImage } from "../../../../utils/api";
+import { addDisplayImage, fetchAdminProfile } from "../../../../utils/api";
 import { uiActions } from "../../../../store/ui-slice";
 import { fetchCategories } from "../../../../utils/api";
-
 
 const AddDisplayForm = (props) => {
   const dispatch = useDispatch();
@@ -19,7 +24,6 @@ const AddDisplayForm = (props) => {
   const imageRef = useRef();
   const categoryRef = useRef();
 
-
   const loaderData = useLoaderData();
 
   const changeNameHandler = (event) => {
@@ -29,7 +33,16 @@ const AddDisplayForm = (props) => {
     }
     setImageName(name);
   };
-
+  // useEffect(() => {
+  //   (async () => {
+  //     const res = await fetchAdminProfile();
+  //     console.log(res);
+  // if (res?.adminProfile?.role === "ADMIN") {
+  //   console.log("came");
+  //   setDisable(true);
+  //     }
+  //   })();
+  // }, []);
   const submitFormHandler = async (event) => {
     event.preventDefault();
     if (!imageRef.current.files[0]) {
@@ -40,11 +53,13 @@ const AddDisplayForm = (props) => {
       text: textRef.current.value,
       label: labelRef.current.value,
       image: imageRef.current.files[0],
+      categoryName: categoryRef.current.value,
     };
     props.onStateChange({ status: true, activity: "Uploading.." });
     try {
       await addDisplayImage(data);
     } catch (err) {
+      props.onStateChange({ status: false, activity: "None" });
       throw err;
     }
     props.onStateChange(null, true);
@@ -91,10 +106,10 @@ const AddDisplayForm = (props) => {
                 fullWidth={true}
                 required
                 select
-                defaultValue={categories[0]._id}
+                defaultValue={categories[0]?.name}
               >
                 {categories.map((category) => (
-                  <MenuItem key={category._id} value={category._id}>
+                  <MenuItem key={category._id} value={category.name}>
                     {category.name}
                   </MenuItem>
                 ))}
@@ -159,6 +174,5 @@ export async function loader() {
   }
   return result.length > 0 ? result : [{ name: "No-Category", _id: "Empty" }];
 }
-
 
 export default AddDisplayForm;

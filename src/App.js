@@ -15,16 +15,19 @@ import ResetPassword from "./pages/ResetPassword";
 import { action as resetPasswordAction } from "./components/Dekstop/Form/ResetPasswordForm";
 import { action as forgotPasswordAction } from "./components/Dekstop/Form/ForgotPasswordForm";
 import PrivateRoutes from "./routes/PrivateRoutes";
-import ProtectedRoutes from "./routes/ProtectedRoutes";
+import ProtectedRoutes, {
+  loader as profileLoader,
+} from "./routes/ProtectedRoutes";
 import Error from "./pages/Error/Error";
 import Success from "./pages/Success/Success";
 import AddProduct from "./components/Product/AddProduct";
 import { loader as CategoryLoader } from "./components/Product/Form/AddProductForm";
-import {loader as DisplayCatagoryLoader} from "./components/Dekstop/Display/Form/AddDisplayForm"
+import { loader as DisplayCatagoryLoader } from "./components/Dekstop/Display/Form/AddDisplayForm";
 import "./App.css";
 import AddCategory from "./components/Category/AddCategory";
 import Orders from "./components/Orders/Orders";
-import UserPage from "./components/Users/user";
+import UsersPage from "./components/Users/user";
+import AdminsPage from "./components/Admins/Admin";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,9 +51,16 @@ const router = createBrowserRouter(
         <Route path="/success" element={<Success />} />
       </Route>
       <Route element={<Layout />}>
-        <Route element={<ProtectedRoutes destination="/login" />}>
+        <Route
+          element={<ProtectedRoutes destination="/login" />}
+          loader={profileLoader}
+        >
           <Route index element={<Navigate to="/admin" />} />
-          <Route path="/admin" element={<Dashboard />} loader={DisplayCatagoryLoader} />
+          <Route
+            path="/admin"
+            element={<Dashboard />}
+            loader={DisplayCatagoryLoader}
+          />
           <Route
             path="/admin/product"
             element={<AddProduct />}
@@ -61,15 +71,10 @@ const router = createBrowserRouter(
             element={<AddCategory />}
             loader={CategoryLoader}
           />
-          <Route
-            path="/admin/orders"
-            element={<Orders/>}
-            />
+          <Route path="/admin/orders" element={<Orders />} />
+          <Route path="/admin/admins" element={<AdminsPage />} />
         </Route>
-        <Route
-           path="/admin/customers"
-           element={<UserPage/>}
-           />
+        <Route path="/admin/customers" element={<UsersPage />} />
       </Route>
     </Route>
   )
