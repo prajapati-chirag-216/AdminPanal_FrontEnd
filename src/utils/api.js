@@ -321,7 +321,7 @@ export const updateOrder = async(updateObj, updateId) =>{
 export const getOrderById = async(id) =>{
 
      try{
-       const response = await axios.get(`${BACKAND_DOMAIN}/getOrderById/${id}`);
+       const response = await axios.get(`${BACKAND_DOMAIN}/getOrder/${id}`);
 
        const data = await response.data
 

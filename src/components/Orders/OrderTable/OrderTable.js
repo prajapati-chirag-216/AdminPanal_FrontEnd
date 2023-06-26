@@ -106,7 +106,9 @@ const OrderTable = () => {
 
   const orderData = useSelector((state) => state.order.orders);
 
-  console.log(orderData);
+  // if(orderData.length !== 0){
+  //     console.log(orderData[1].orderedItems[0])
+  // }
 
   const fetchOrderData = useSelector((state) => state.order.fetchOrderData);
   const showModel = useSelector((state) => state.ui.updateModelState);
@@ -115,10 +117,14 @@ const OrderTable = () => {
 
   useEffect(() => {
     setRows(
-      orderData?.map((order) => ({
+       orderData.length !== 0 ?orderData.map((order) =>
+       {
+        console.log(order,'ou')
+      return( ({
+        
         _id: order._id,
         products: order.orderedItems
-          .map((item) => item.name + "- x" + item.quntity)
+          .map((item) => item.productId.name + "- x" + item.quntity)
           .join(" , "),
         Bill: order.totalPrice + "$",
         TransactionId: order._id,
@@ -130,6 +136,8 @@ const OrderTable = () => {
         createdAt: new Date(order.createdAt).toLocaleString(),
         updatedAt: new Date(order.updatedAt).toLocaleString(),
       }))
+    }
+      ):null
     );
   }, [orderData]);
 
