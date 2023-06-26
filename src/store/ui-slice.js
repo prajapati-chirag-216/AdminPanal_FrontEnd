@@ -5,6 +5,8 @@ const initialState = {
   success: false,
   addModelState: false,
   updateModelState: false,
+  productName:localStorage.getItem('productName')||'',
+  ReviewChange:false
   snackBar: {
     status: false,
     message: "",
@@ -28,6 +30,13 @@ const uiSlice = createSlice({
     },
     setAddModelState(state, action) {
       state.addModelState = action.payload;
+    },
+    setReviewChange(state, action) {
+      state.ReviewChange = action.payload;
+    },
+    setProductName(state, action) {
+      localStorage.setItem("productName", action.payload);
+      state.productName = action.payload;
     },
     setUpdateModelState(state, action) {
       state.updateModelState = action.payload;

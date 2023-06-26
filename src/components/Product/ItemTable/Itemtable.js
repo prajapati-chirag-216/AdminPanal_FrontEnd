@@ -9,6 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import TableRow from "@mui/material/TableRow";
 import { useDispatch, useSelector } from "react-redux";
 import SimpleModal from "../../Dekstop/Modal/Modal";
@@ -62,6 +63,13 @@ const columns = [
     label: "updatedAt",
     minWidth: 80,
     align: "left",
+    format: (value) => value.toFixed(2),
+  },
+  {
+    id:'Reviews',
+    label: "Reviews",
+    minWidth:80,
+    align:'left',
     format: (value) => value.toFixed(2),
   },
   {
@@ -144,6 +152,15 @@ const ItemTable = () => {
       throw err;
     }
   }, [fetchProductData]);
+
+  const handleReviewsChange = async(id,name) =>{
+    if (!id) return;
+    
+    console.log(name,'ef')
+      dispatch(uiActions.setProductName(name))
+      window.open(`/admin/reviews/${id}`)
+       
+  }
 
   const handleDeleteChange = async (id) => {
     if (!id) return;
@@ -271,6 +288,16 @@ const ItemTable = () => {
                                 onClick={handleUpdateChange.bind(null, row._id)}
                               >
                                 <BorderColorIcon />
+                              </IconButton>
+                            </TableCell>
+                          );
+                        }else if (column.id === "Reviews") {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              <IconButton
+                                onClick={handleReviewsChange.bind(null, row._id,row.name)}
+                              >
+                                <VisibilityIcon />
                               </IconButton>
                             </TableCell>
                           );
