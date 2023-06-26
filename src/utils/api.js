@@ -374,3 +374,44 @@ export const getUsers = async() =>{
       throw err;
    }
 }
+
+
+export const fetchProductReviews =  async(productId) => {
+     
+     try{
+        
+        const response = await axios.get(`${BACKAND_DOMAIN}/getproductReviews/${productId}`)
+
+         const data = await response.data
+         return data
+     }catch(err){
+       throw err
+     }
+}
+export const PostReview = async(ReviewData,id) =>{
+
+     try{
+         const response = axios.post(`${BACKAND_DOMAIN}/productreview/${id}`,ReviewData);
+
+         const data = await response.data
+
+         console.log(data)
+         return data
+     }catch(err){
+        throw err
+     }
+}
+
+export const DeleteReview = async(id) =>{
+   
+     try{
+         
+        const response = axios.delete(`${BACKAND_DOMAIN}/deletereview/${id}`);
+
+        const data = await response.data
+
+        return data
+     }catch(err){
+        throw err
+     }
+}

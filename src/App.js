@@ -21,10 +21,12 @@ import Success from "./pages/Success/Success";
 import AddProduct from "./components/Product/AddProduct";
 import { loader as CategoryLoader } from "./components/Product/Form/AddProductForm";
 import {loader as DisplayCatagoryLoader} from "./components/Dekstop/Display/Form/AddDisplayForm"
+import {loader as ReviewsLoader} from './components/Product/ProductReviews/productreviews'
 import "./App.css";
 import AddCategory from "./components/Category/AddCategory";
 import Orders from "./components/Orders/Orders";
 import UserPage from "./components/Users/user";
+import ProductReviews from "./components/Product/ProductReviews/productreviews";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -69,6 +71,11 @@ const router = createBrowserRouter(
         <Route
            path="/admin/customers"
            element={<UserPage/>}
+           />
+      <Route
+           path="/admin/reviews/:id"
+           element={<ProductReviews/>}
+           loader={ReviewsLoader}
            />
       </Route>
     </Route>

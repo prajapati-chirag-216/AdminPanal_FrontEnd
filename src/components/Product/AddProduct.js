@@ -26,6 +26,7 @@ const AddProduct = () => {
 
   return (
     <Fragment>
+      <div className="productPageContainer">
       {showModel && (
         <SimpleModal onOpen={showModel} onClose={closeModelHandler}>
           <AddProductForm action="add" />
@@ -43,9 +44,9 @@ const AddProduct = () => {
         sx={{
           letterSpacing: "1px",
           alignSelf: "center",
-          position: "fixed",
+          // position: "fixed",
           fontSize: "1.6rem",
-          marginTop: "0.5rem",
+          // marginTop: "0.5rem",
           color: "rgb(80,80,80)",
           width: "13rem",
           textTransform: "uppercase",
@@ -54,9 +55,11 @@ const AddProduct = () => {
       >
         Products
       </Typography>
+      </div>
       <div className="itemTableContanier">
         <Itemtable />
       </div>
+    
     </Fragment>
   );
 };
