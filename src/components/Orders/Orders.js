@@ -33,6 +33,7 @@ const Orders = () => {
     const fetch = async () => {
       try {
         const Data = await getOrderById(orderId);
+        console.log(Data)
         dispatch(orderActions.setOrders(Data));
       } catch (err) {
         console.error(err);
@@ -57,31 +58,31 @@ const Orders = () => {
   };
 
   const handleCloseFilter = async () => {
-    // const fetch = async () => {
-    //   try {
-    //     const data = await fetchOrders();
-    //     dispatch(orderActions.setOrders(data));
-    //     setOrderId("");
-    //   } catch (err) {
-    //     console.error(err);
-    //   }
-    // };
-    // try {
-    //   if (!fetchOrderData.status || fetchOrderData.activity === "Fetching..") {
-    //     fetch()
-    //       .then((res) =>
-    //         dispatch(
-    //           orderActions.setFetchOrderData({
-    //             status: false,
-    //             activity: "None",
-    //           })
-    //         )
-    //       )
-    //       .catch((err) => err);
-    //   }
-    // } catch (err) {
-    //   throw err;
-    // }
+    const fetch = async () => {
+      try {
+        const data = await fetchOrders();
+        dispatch(orderActions.setOrders(data));
+        setOrderId("");
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    try {
+      if (!fetchOrderData.status || fetchOrderData.activity === "Fetching..") {
+        fetch()
+          .then((res) =>
+            dispatch(
+              orderActions.setFetchOrderData({
+                status: false,
+                activity: "None",
+              })
+            )
+          )
+          .catch((err) => err);
+      }
+    } catch (err) {
+      throw err;
+    }
     setOrderId("");
     setIsSearchMode(false);
   };

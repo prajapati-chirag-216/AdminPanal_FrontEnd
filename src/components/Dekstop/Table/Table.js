@@ -8,9 +8,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { getTodaysOrders } from "../../../utils/api";
+import LoadingSpinner from "../UI/LoadingSpinner";
 
 const columns = [
   { id: "products", label: "products", minWidth: 80 },
@@ -74,27 +75,31 @@ const columns = [
 
 const OrdersTable = () => {
   const matches = useMediaQuery("(max-width:700px)");
-  const [todayOrderObj, setTodayOrderObj] = useState("");
+  const [todayOrders, setTodayOrders] = useState([]);
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
     const run = async () => {
       const data = await getTodaysOrders();
 
-      setTodayOrderObj(data);
+      setTodayOrders(data);
     };
 
     run();
+
+   
   }, []);
+
+  console.log(todayOrders);
 
   useEffect(() => {
     setRows(
-      todayOrderObj
-        ? todayOrderObj.map((order) => ({
+      todayOrders.length !== 0
+        ? todayOrders.map((order) => ({
             _id: order._id,
             products: order.orderedItems
-              .map((item) => item.name + "- x" + item.quntity)
-              .join(" , "),
+            .map((item) => item.productId.name + "- x" + item.quntity)
+            .join(" , "),
             Bill: order.totalPrice,
             TransactionId: order._id,
             deliveryStatus: order.deliveryStatus,
@@ -106,7 +111,7 @@ const OrdersTable = () => {
           }))
         : []
     );
-  }, [todayOrderObj]);
+  }, [todayOrders]);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -120,6 +125,18 @@ const OrdersTable = () => {
     setPage(0);
   };
 
+  if (!rows)
+  return (
+    <Container
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "3rem",
+      }}
+    >
+   <Typography>Waiting For Today's Orders</Typography> 
+    </Container>
+  );
   return (
     <Paper
       sx={{
