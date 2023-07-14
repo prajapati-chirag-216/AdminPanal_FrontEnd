@@ -8,8 +8,6 @@ import {
 } from "../../../shared/Reducers/InputReducers";
 import { loginAdmin } from "../../../utils/api";
 import { useDispatch } from "react-redux";
-import Notification from "../UI/Notification";
-import { authActions } from "../../../store/auth-slice";
 import { uiActions } from "../../../store/ui-slice";
 const SigninForm = () => {
   const dispatch = useDispatch();
@@ -67,7 +65,7 @@ const SigninForm = () => {
           severity: "success",
         })
       );
-      return navigate("/admin", { replace: true });
+      return navigate("/admin/dashboard", { replace: true });
     }
     if (actionData?.response?.status === 401) {
       if (actionData.response?.data?.validityStatus === "email") {
@@ -78,32 +76,8 @@ const SigninForm = () => {
     }
     // eslint-disable-next-line
   }, [actionData]);
-  // useEffect(() => {
-  //   if (actionData && actionData.success) {
-  //     dispatch(authActions.login());
-  //     return navigate("/admin", { replace: true });
-  //   }
-  //   if (actionData && actionData.response.status === 502) {
-  //     setShowNotification(true);
-  //     setTimeout(() => {
-  //       setShowNotification(false);
-  //     }, 4000);
-  //     if (actionData.response.data.validityStatus === "email") {
-  //       document.getElementById("email").focus();
-  //     } else {
-  //       document.getElementById("password").focus();
-  //     }
-  //   }
-  //   // eslint-disable-next-line
-  // }, [actionData]);
   return (
     <Fragment>
-      {/* {showNotification && (
-        <Notification
-          message={actionData.response.data.message}
-          status="invalid"
-        />
-      )} */}
       <div className={classes["action-div"]}>
         <Typography
           fontSize="2rem"
@@ -147,7 +121,6 @@ const SigninForm = () => {
               padding: "0.7rem",
             }}
             onClick={!formIsValid ? validateFormHandler : () => {}}
-            // disabled={showNotification}
           >
             SignIn
           </Button>
@@ -168,10 +141,6 @@ export async function action({ request }) {
   try {
     response = await loginAdmin(adminData);
   } catch (err) {
-    // if (err.response && err.response.status === 502) {
-    //   return err;
-    // }
-    // throw err;
     return err;
   }
   return response;

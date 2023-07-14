@@ -27,39 +27,37 @@ const AddProduct = () => {
   return (
     <Fragment>
       <div className="productPageContainer">
-      {showModel && (
-        <SimpleModal onOpen={showModel} onClose={closeModelHandler}>
-          <AddProductForm action="add" />
-        </SimpleModal>
-      )}
-      <StatusButton
-        isLoading={fetchProductData}
-        icon={<AddIcon />}
-        onClick={handleAddChange}
-      >
-        {fetchProductData.status ? fetchProductData.activity : "Add Product"}
-      </StatusButton>
-      <Typography
-        align="center"
-        sx={{
-          letterSpacing: "1px",
-          alignSelf: "center",
-          // position: "fixed",
-          fontSize: "1.6rem",
-          // marginTop: "0.5rem",
-          color: "rgb(80,80,80)",
-          width: "13rem",
-          textTransform: "uppercase",
-          borderBottom: "1px solid rgb(80,80,80)",
-        }}
-      >
-        Products
-      </Typography>
+        {showModel && (
+          <SimpleModal onOpen={showModel} onClose={closeModelHandler}>
+            <AddProductForm action="add" />
+          </SimpleModal>
+        )}
+        <StatusButton
+          isLoading={fetchProductData}
+          icon={<AddIcon />}
+          onClick={handleAddChange}
+        >
+          {fetchProductData.status ? fetchProductData.activity : "Add Product"}
+        </StatusButton>
+        <Typography
+          align="center"
+          sx={{
+            letterSpacing: "1px",
+            alignSelf: "center",
+            fontSize: "1.6rem",
+            color: "rgb(80,80,80)",
+            width: "13rem",
+            textTransform: "uppercase",
+            borderBottom: "1px solid rgb(80,80,80)",
+            marginLeft: "5rem",
+          }}
+        >
+          Products
+        </Typography>
       </div>
       <div className="itemTableContanier">
         <Itemtable />
       </div>
-    
     </Fragment>
   );
 };

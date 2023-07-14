@@ -5,8 +5,8 @@ const initialState = {
   success: false,
   addModelState: false,
   updateModelState: false,
-  productName:localStorage.getItem('productName')||'',
-  ReviewChange:false
+  productName: localStorage.getItem("productName") || "",
+  ReviewChange: false,
   snackBar: {
     status: false,
     message: "",

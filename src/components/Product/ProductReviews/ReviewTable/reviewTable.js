@@ -8,70 +8,60 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
+// import BorderColorIcon from "@mui/icons-material/BorderColor";
 import TableRow from "@mui/material/TableRow";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, IconButton } from "@mui/material";
 import ReviewContainer from "../ReviewComponent/reviewComponet";
 import { uiActions } from "../../../../store/ui-slice";
 import { DeleteReview } from "../../../../utils/api";
-import { productActions } from "../../../../store/product-slice";
+// import { productActions } from "../../../../store/product-slice";
+import LoadingSpinner from "../../../Dekstop/UI/LoadingSpinner";
 
 const columns = [
   {
-    id:'Reviews',
+    id: "Reviews",
     label: "Reviews",
-    minWidth:80,
-    align:'left',
+    minWidth: 400,
+    align: "left",
     format: (value) => value.toFixed(2),
   },
   {
     id: "Delete",
     label: "Delete",
     minWidth: 80,
-    align: "left",
+    align: "center",
     format: (value) => value.toFixed(2),
-  }
+  },
 ];
 
 const ReviewTable = (props) => {
   const dispatch = useDispatch();
 
-
-  const ReviewChange = useSelector((state) => state.ui.ReviewChange)
+  const ReviewChange = useSelector((state) => state.ui.ReviewChange);
 
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
     setRows(
       props.reviews?.map((review) => ({
-        Reviews:review,
+        Reviews: review,
         _id: review._id,
       }))
     );
   }, [props.reviews]);
 
-
-
-
-
   const handleDeleteChange = async (id) => {
     if (!id) return;
-   
+
     try {
-     const response =  await DeleteReview(id);
-    //  dispatch(productActions.setProductReviews)
-      console.log(response)
-      dispatch(uiActions.setReviewChange(!ReviewChange))
-      
+      await DeleteReview(id);
+      //  dispatch(productActions.setProductReviews)
+      dispatch(uiActions.setReviewChange(!ReviewChange));
     } catch (err) {
       throw err;
     }
   };
-
-
-
-
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -85,19 +75,18 @@ const ReviewTable = (props) => {
     setPage(0);
   };
 
- 
-//   if (!rows)
-//     return (
-//       <Container
-//         sx={{
-//           display: "flex",
-//           justifyContent: "center",
-//           marginTop: "3rem",
-//         }}
-//       >
-//         <LoadingSpinner />
-//       </Container>
-//     );
+  if (!rows)
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        <LoadingSpinner />
+      </Container>
+    );
   return (
     <Fragment>
       <Paper
@@ -111,7 +100,13 @@ const ReviewTable = (props) => {
         <TableContainer sx={{ maxHeight: 800 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
-              <TableRow>
+              <TableRow
+                sx={{
+                  ".MuiTableCell-root": {
+                    paddingLeft: "2rem",
+                  },
+                }}
+              >
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
@@ -123,6 +118,7 @@ const ReviewTable = (props) => {
                       paddingTop: "1.5rem",
                       paddingBottom: "1.5rem",
                       textTransform: "capitalize",
+                      paddingRight: "1rem",
                     }}
                   >
                     {column.label}
@@ -142,26 +138,33 @@ const ReviewTable = (props) => {
                           return (
                             <TableCell key={column.id} align={column.align}>
                               <IconButton
+                                sx={{ marginLeft: "10px" }}
                                 onClick={handleDeleteChange.bind(null, row._id)}
                               >
-                                <DeleteForeverIcon sx={{transform:'scale(1.5)'}}/>
+                                <DeleteForeverIcon
+                                  sx={{
+                                    transform: "scale(1.5)",
+                                  }}
+                                />
                               </IconButton>
                             </TableCell>
                           );
-                        } 
+                        }
                         return (
                           <TableCell
                             style={{
-                            //   color: Text_Color[column.id] || "rgb(80,80,80)",
+                              //   color: Text_Color[column.id] || "rgb(80,80,80)",
                               maxWidth: "15rem",
                               fontSize: "1rem",
                             }}
                             key={column.id}
                             align={column.align}
                           >
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : <ReviewContainer review={value}/>}
+                            {column.format && typeof value === "number" ? (
+                              column.format(value)
+                            ) : (
+                              <ReviewContainer review={value} />
+                            )}
                           </TableCell>
                         );
                       })}

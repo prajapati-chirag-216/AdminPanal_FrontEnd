@@ -9,10 +9,16 @@ import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantity
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
-
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 const DUMMY_CARDS = [
   {
-    icon: PersonIcon,
+    icon: ManageAccountsIcon,
+    title: "Admins",
+    link: "admins",
+  },
+  {
+    icon: GroupRoundedIcon,
     title: "Customers",
     link: "customers",
   },
@@ -42,20 +48,27 @@ const CardDiv = () => {
   return (
     <Grid container spacing={4}>
       {DUMMY_CARDS.map((card, index) => (
-        <Grid item key={index} xs={12} sm={6} md={3}>
+        <Grid item key={index} xs={12} sm={6} md={index < 2 ? 6 : 4}>
           <Card
             sx={{
               minWidth: 275,
               boxShadow: "0px 1px 4px grey",
               "&:hover": {
                 cursor: "pointer",
-                transition: "transform 500ms",
-                transform: "scale(1.08)",
+                transition: "scale 500ms",
+                scale: "1.03",
+                background: "rgb(245,245,245)",
               },
             }}
             onClick={navigateHandler.bind(null, card.link)}
           >
-            <CardContent style={{ display: "flex", flexDirection: "column" }}>
+            <CardContent
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+              }}
+            >
               <div
                 style={{
                   display: "flex",
@@ -71,15 +84,6 @@ const CardDiv = () => {
               </div>
               <Typography variant="h6" component="div" align="center">
                 {card.title}
-              </Typography>
-              <Typography
-                variant="h6"
-                fontSize="small"
-                color="green"
-                component="div"
-                align="center"
-              >
-                7%
               </Typography>
             </CardContent>
           </Card>

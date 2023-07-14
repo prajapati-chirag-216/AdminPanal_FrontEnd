@@ -33,7 +33,6 @@ const Orders = () => {
     const fetch = async () => {
       try {
         const Data = await getOrderById(orderId);
-        console.log(Data)
         dispatch(orderActions.setOrders(Data));
       } catch (err) {
         console.error(err);

@@ -33,16 +33,7 @@ const AddDisplayForm = (props) => {
     }
     setImageName(name);
   };
-  // useEffect(() => {
-  //   (async () => {
-  //     const res = await fetchAdminProfile();
-  //     console.log(res);
-  // if (res?.adminProfile?.role === "ADMIN") {
-  //   console.log("came");
-  //   setDisable(true);
-  //     }
-  //   })();
-  // }, []);
+
   const submitFormHandler = async (event) => {
     event.preventDefault();
     if (!imageRef.current.files[0]) {

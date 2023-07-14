@@ -335,27 +335,34 @@ export const updateAdmin = async (newObj, id) => {
 
 export const fetchProductReviews = async (productId) => {
   try {
-    const response = await axios.get(
-      `${BACKAND_DOMAIN}/getproductReviews/${productId}`
-    );
-
-    const data = await response.data;
-    return data;
+    const config = {
+      url: `/getproductReviews/${productId}`,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
   } catch (err) {
     throw err;
   }
 };
-export const PostReview = async (ReviewData, id) => {
+export const PostReview = async (reviewData, id) => {
   try {
-    const response = axios.post(
-      `${BACKAND_DOMAIN}/productreview/${id}`,
-      ReviewData
-    );
+    const config = {
+      method: "POST",
+      url: `/productreview/${id}`,
+      data: reviewData,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
+    // const response = axios.post(
+    //   `${BACKAND_DOMAIN}/productreview/${id}`,
+    //   reviewData
+    // );
 
-    const data = await response.data;
+    // const data = await response.data;
 
-    console.log(data);
-    return data;
+    // return data;
   } catch (err) {
     throw err;
   }
@@ -363,11 +370,18 @@ export const PostReview = async (ReviewData, id) => {
 
 export const DeleteReview = async (id) => {
   try {
-    const response = axios.delete(`${BACKAND_DOMAIN}/deletereview/${id}`);
+    const config = {
+      method: "DELETE",
+      url: `/deletereview/${id}`,
+      withCredentials: true,
+    };
+    const response = await AxiosInstance(config);
+    return response;
+    // const response = axios.delete(`${BACKAND_DOMAIN}/deletereview/${id}`);
 
-    const data = await response.data;
+    // const data = await response.data;
 
-    return data;
+    // return data;
   } catch (err) {
     throw err;
   }
