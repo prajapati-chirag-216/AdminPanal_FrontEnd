@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -8,9 +8,13 @@ import GradingIcon from "@mui/icons-material/Grading";
 import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import { fetchAdminProfile } from "../../../utils/api";
+import roleTypes from "../../../utils/roles/roleTypes";
+import { uiActions } from "../../../store/ui-slice";
+import { useDispatch } from "react-redux";
 const DUMMY_CARDS = [
   {
     icon: ManageAccountsIcon,
@@ -42,8 +46,25 @@ const DUMMY_CARDS = [
 const CardDiv = () => {
   const navigat = useNavigate();
   const matches = useMediaQuery("(max-width:700px)");
-  const navigateHandler = (link) => {
-    return navigat(link);
+  const dispatch = useDispatch();
+
+  const navigateHandler = async (link) => {
+    const res = await fetchAdminProfile();
+    if (
+      !(link === "admins") ||
+      res.adminProfile.role === roleTypes.SUPER_ADMIN
+    ) {
+      return navigat("/admin/" + link);
+    } else {
+      console.log("ran");
+      dispatch(
+        uiActions.setSnackBar({
+          status: true,
+          message: "Unauthorized access",
+          severity: "warning",
+        })
+      );
+    }
   };
   return (
     <Grid container spacing={4}>

@@ -12,11 +12,10 @@ import "./AddReviewForm.style.scss";
 import { PostReview } from "../../../utils/api";
 import { uiActions } from "../../../store/ui-slice";
 
-
 const AddReviewForm = ({ action }) => {
   const dispatch = useDispatch();
 
-  const ReviewChange = useSelector((state) => state.ui.ReviewChange)
+  const ReviewChange = useSelector((state) => state.ui.ReviewChange);
 
   const matches = useMediaQuery("(max-width:700px)");
   const nameRef = useRef();
@@ -24,16 +23,12 @@ const AddReviewForm = ({ action }) => {
   const descriptionRef = useRef();
   const ratingRef = useRef();
 
-
-  const handleReviewAction = async(event) =>{
-
+  const handleReviewAction = async (event) => {
     event.preventDefault();
 
-
-    let url = window.location.href; 
-    let urlArray = url.split('/');
-    const productId = urlArray[urlArray.length-1];
-    
+    let url = window.location.href;
+    let urlArray = url.split("/");
+    const productId = urlArray[urlArray.length - 1];
 
     const ReviewDetails = {
       name: nameRef.current.value,
@@ -42,23 +37,14 @@ const AddReviewForm = ({ action }) => {
       rating: ratingRef.current.value,
     };
 
-    
-       
-     
-     try{
-         
-          dispatch(uiActions.setAddModelState(false))
-         const response = await PostReview(ReviewDetails,productId)
-         dispatch(uiActions.setReviewChange(!ReviewChange))
-
-     }catch(err){
-         throw err
-     }
-     
-         
-  }
- 
-
+    try {
+      dispatch(uiActions.setAddModelState(false));
+      const response = await PostReview(ReviewDetails, productId);
+      dispatch(uiActions.setReviewChange(!ReviewChange));
+    } catch (err) {
+      throw err;
+    }
+  };
 
   return (
     <div>
@@ -67,11 +53,7 @@ const AddReviewForm = ({ action }) => {
           Add Review
         </Typography>
       </div>
-      <form
-        className='reviewForm'
-        onSubmit={handleReviewAction}
-        method="post"
-      >
+      <form className="reviewForm" onSubmit={handleReviewAction} method="post">
         <div>
           <TextField
             inputRef={nameRef}
@@ -109,7 +91,7 @@ const AddReviewForm = ({ action }) => {
           maxRows={3}
           required
         />
- 
+
         <TextField
           inputRef={ratingRef}
           id="outlined-basic"
