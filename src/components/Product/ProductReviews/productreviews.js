@@ -86,9 +86,10 @@ const closeModelHandler = () =>{
                 {
                     (reviews) => {
 
+                      console.log(reviews)
                        
                          return (
-                          reviews.length !== 0?
+                          reviews?.length !== 0?
                              <div className="reviewTableContainer">
                                  <ReviewTable reviews={reviews}/>
                              </div>:<Typography sx={{position:'absolute',alignSelf:'center',top:'30rem',letterSpacing:'3px',color:'rgb(80,80,80)'}}variant='h3' >{`No Reviews  On ${productName} Yet !`}</Typography>
@@ -123,7 +124,7 @@ console.log(url)
 
      try{
 
-         
+         console.log(productId)
          response = await fetchProductReviews(productId)
          console.log(response,'oo')
          return response

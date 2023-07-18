@@ -16,6 +16,7 @@ import ReviewContainer from "../ReviewComponent/reviewComponet";
 import { uiActions } from "../../../../store/ui-slice";
 import { DeleteReview } from "../../../../utils/api";
 import { productActions } from "../../../../store/product-slice";
+import LoadingSpinner from "../../../Dekstop/UI/LoadingSpinner";
 
 const columns = [
   {
@@ -29,7 +30,7 @@ const columns = [
     id: "Delete",
     label: "Delete",
     minWidth: 80,
-    align: "left",
+    align: "center",
     format: (value) => value.toFixed(2),
   }
 ];
@@ -86,18 +87,18 @@ const ReviewTable = (props) => {
   };
 
  
-//   if (!rows)
-//     return (
-//       <Container
-//         sx={{
-//           display: "flex",
-//           justifyContent: "center",
-//           marginTop: "3rem",
-//         }}
-//       >
-//         <LoadingSpinner />
-//       </Container>
-//     );
+  if (!rows)
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        <LoadingSpinner />
+      </Container>
+    );
   return (
     <Fragment>
       <Paper
