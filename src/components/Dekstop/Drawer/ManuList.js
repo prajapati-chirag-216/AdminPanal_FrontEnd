@@ -6,71 +6,98 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
+  useMediaQuery,
 } from "@mui/material";
-import { Inbox, Dashboard, Category, Inventory2 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import {
+  Inbox,
+  Dashboard,
+  Category,
+  Inventory2,
+  ManageAccounts,
+  Person,
+  Group,
+} from "@mui/icons-material";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
+const ListItems = [
+  {
+    icon: Dashboard,
+    title: "Dashboard",
+    link: "dashboard",
+  },
+  {
+    icon: ManageAccounts,
+    title: "Admins",
+    link: "admins",
+  },
+  {
+    icon: Group,
+    title: "Customers",
+    link: "customers",
+  },
+  {
+    icon: Inbox,
+    title: "Orders",
+    link: "orders",
+  },
+  {
+    icon: Inventory2,
+    title: "Products",
+    link: "product",
+  },
+  {
+    icon: Category,
+    title: "Catogaries",
+    link: "category",
+  },
+];
 const ManuList = (props) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const matches = useMediaQuery("(max-width:700px)");
   return (
     <Box
-      sx={{ width: 250 }}
+      sx={{ width: !matches ? 400 : "60vw" }}
       role="presentation"
       onClick={props.toggleDrawer}
       onKeyDown={props.toggleDrawer}
     >
       <List>
-        <ListItem disablePadding onClick={props.onClose}>
-          <ListItemButton
-            sx={{ height: "100px", display: "flex", flexDirection: "column" }}
-            onClick={() => {
-              navigate("/admin");
+        {ListItems.map((item, index) => (
+          <ListItem
+            disablePadding
+            onClick={props.onClose}
+            key={index}
+            sx={{
+              background: location.pathname.endsWith(item.link)
+                ? "rgb(235,235,235)"
+                : "transparent",
             }}
           >
-            <ListItemIcon style={{ justifyContent: "center" }}>
-              <Dashboard fontSize="large" />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" style={{ textAlign: "center" }} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding onClick={props.onClose}>
-          <ListItemButton
-            sx={{ height: "100px", display: "flex", flexDirection: "column" }}
-            onClick={() => {
-              navigate("/admin/customers");
-            }}
-          >
-            <ListItemIcon style={{ justifyContent: "center" }}>
-              <Category fontSize="large" />
-            </ListItemIcon>
-            <ListItemText primary="Customer" style={{ textAlign: "center" }} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding onClick={props.onClose}>
-          <ListItemButton
-            sx={{ height: "100px", display: "flex", flexDirection: "column" }}
-            onClick={() => {
-              navigate("/admin/product");
-            }}
-          >
-            <ListItemIcon style={{ justifyContent: "center" }}>
-              <Inventory2 fontSize="large" />
-            </ListItemIcon>
-            <ListItemText primary="Product" style={{ textAlign: "center" }} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding onClick={props.onClose}>
-          <ListItemButton
-            sx={{ height: "100px", display: "flex", flexDirection: "column" }}
-            onClick={() => {
-              navigate("/admin/orders");
-            }}
-          >
-            <ListItemIcon style={{ justifyContent: "center" }}>
-              <Inbox fontSize="large" />
-            </ListItemIcon>
-            <ListItemText primary="Order" style={{ textAlign: "center" }} />
-          </ListItemButton>
-        </ListItem>
+            <ListItemButton
+              sx={{
+                height: !matches ? "100px" : "70px",
+                display: "flex",
+                flexDirection: "column",
+              }}
+              onClick={() => {
+                navigate(`/admin/${item.link}`);
+              }}
+            >
+              <ListItemIcon sx={{ justifyContent: "center" }}>
+                <item.icon fontSize={!matches ? "large" : "medium"} />
+              </ListItemIcon>
+              <ListItemText
+                primary={item.title}
+                sx={{
+                  textAlign: "center",
+                  ".MuiTypography-root": {
+                    fontSize: !matches ? "1.1rem" : "0.9rem",
+                  },
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
     </Box>
   );

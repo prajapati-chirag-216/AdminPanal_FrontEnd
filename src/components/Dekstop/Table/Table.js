@@ -86,11 +86,7 @@ const OrdersTable = () => {
     };
 
     run();
-
-   
   }, []);
-
-  console.log(todayOrders);
 
   useEffect(() => {
     setRows(
@@ -98,8 +94,8 @@ const OrdersTable = () => {
         ? todayOrders.map((order) => ({
             _id: order._id,
             products: order.orderedItems
-            .map((item) => item.productId.name + "- x" + item.quntity)
-            .join(" , "),
+              .map((item) => item.productId.name + "- x" + item.quntity)
+              .join(" , "),
             Bill: order.totalPrice,
             TransactionId: order._id,
             deliveryStatus: order.deliveryStatus,
@@ -126,17 +122,17 @@ const OrdersTable = () => {
   };
 
   if (!rows)
-  return (
-    <Container
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "3rem",
-      }}
-    >
-   <Typography>Waiting For Today's Orders</Typography> 
-    </Container>
-  );
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        <Typography>Waiting For Today's Orders</Typography>
+      </Container>
+    );
   return (
     <Paper
       sx={{

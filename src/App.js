@@ -23,12 +23,13 @@ import Success from "./pages/Success/Success";
 import AddProduct from "./components/Product/AddProduct";
 import { loader as CategoryLoader } from "./components/Product/Form/AddProductForm";
 import { loader as DisplayCatagoryLoader } from "./components/Dekstop/Display/Form/AddDisplayForm";
-import { loader as ReviewsLoader } from "./components/Product/ProductReviews/productreviews";
 import "./App.css";
 import AddCategory from "./components/Category/AddCategory";
 import Orders from "./components/Orders/Orders";
 import UsersPage from "./components/Users/user";
-import ProductReviews from "./components/Product/ProductReviews/productreviews";
+import ProductReviews, {
+  loader as ReviewsLoader,
+} from "./components/Product/ProductReviews/productreviews";
 import AdminsPage from "./components/Admins/Admin";
 
 const router = createBrowserRouter(
@@ -57,9 +58,9 @@ const router = createBrowserRouter(
           element={<ProtectedRoutes destination="/login" />}
           loader={profileLoader}
         >
-          <Route index element={<Navigate to="/admin" />} />
+          <Route index element={<Navigate to="/admin/dashboard" />} />
           <Route
-            path="/admin"
+            path="/admin/dashboard"
             element={<Dashboard />}
             loader={DisplayCatagoryLoader}
           />
@@ -77,7 +78,11 @@ const router = createBrowserRouter(
           <Route path="/admin/admins" element={<AdminsPage />} />
         </Route>
         <Route path="/admin/customers" element={<UsersPage />} />
-        <Route path='/admin/reviews/:id' element={<ProductReviews/>}/>
+        <Route
+          path="/admin/reviews/:id"
+          element={<ProductReviews />}
+          loader={ReviewsLoader}
+        />
       </Route>
     </Route>
   )
