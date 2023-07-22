@@ -128,9 +128,22 @@ const SigninForm = () => {
         </Form>
       </div>
 
-      <div style={{display:'flex',justifyContent:'center',lineHeight:'3px',flexDirection:'column',letterSpacing:'2px'}}>
-           <h3>Demo Email -: yashu@gmail.com</h3>
-           <h3>Demo Password -: admin@2023</h3>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          lineHeight: "3px",
+          flexDirection: "column",
+          letterSpacing: "2px",
+          padding: "0rem 3rem 2rem 3rem",
+        }}
+      >
+        <Typography sx={{ color: "gray", letterSpacing: "0.5px" }}>
+          Demo email : chirag123@gmail.com{", "}yashu@gmail.com
+        </Typography>
+        <Typography sx={{ color: "gray", letterSpacing: "0.5px" }} align="left">
+          Demo password : admin@2023
+        </Typography>
       </div>
     </Fragment>
   );
