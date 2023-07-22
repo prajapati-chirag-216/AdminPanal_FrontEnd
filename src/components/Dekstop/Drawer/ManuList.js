@@ -18,6 +18,10 @@ import {
   Group,
 } from "@mui/icons-material";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchAdminProfile } from "../../../utils/api";
+import roleTypes from "../../../utils/roles/roleTypes";
+import { uiActions } from "../../../store/ui-slice";
 const ListItems = [
   {
     icon: Dashboard,
@@ -54,6 +58,25 @@ const ManuList = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const matches = useMediaQuery("(max-width:700px)");
+  const dispatch = useDispatch();
+
+  const navigateHandler = async (link) => {
+    const res = await fetchAdminProfile();
+    if (
+      !(link === "admins") ||
+      res.adminProfile.role === roleTypes.SUPER_ADMIN
+    ) {
+      return navigate(`/admin/${link}`);
+    } else {
+      dispatch(
+        uiActions.setSnackBar({
+          status: true,
+          message: "Unauthorized access",
+          severity: "warning",
+        })
+      );
+    }
+  };
   return (
     <Box
       sx={{ width: !matches ? 400 : "60vw" }}
@@ -79,9 +102,10 @@ const ManuList = (props) => {
                 display: "flex",
                 flexDirection: "column",
               }}
-              onClick={() => {
-                navigate(`/admin/${item.link}`);
-              }}
+              onClick={navigateHandler.bind(null, item.link)}
+              // onClick={() => {
+              //   navigate(`/admin/${item.link}`);
+              // }}
             >
               <ListItemIcon sx={{ justifyContent: "center" }}>
                 <item.icon fontSize={!matches ? "large" : "medium"} />

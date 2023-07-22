@@ -1,12 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  Navigate,
-  Outlet,
-  redirect,
-  useLoaderData,
-  useLocation,
-} from "react-router-dom";
+import React from "react";
+import { Navigate, Outlet, redirect, useLoaderData } from "react-router-dom";
 import { fetchAdminProfile } from "../utils/api";
 import { uiActions } from "../store/ui-slice";
 import store from "../store";
@@ -14,39 +7,12 @@ import roleTypes from "../utils/roles/roleTypes";
 
 const ProtectedRoutes = (props) => {
   const loaderData = useLoaderData();
-  const [verifiedAdmin, setVerifiedAdmin] = useState(null);
-  const location = useLocation();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (loaderData?.adminProfile) {
-      if (location.pathname.endsWith("/admins")) {
-        if (loaderData.adminProfile.role === roleTypes.SUPER_ADMIN) {
-          setVerifiedAdmin(true);
-        } else {
-          setVerifiedAdmin(false);
-          dispatch(
-            uiActions.setSnackBar({
-              status: true,
-              message: "Unauthorized access",
-              severity: "warning",
-            })
-          );
-        }
-      } else {
-        setVerifiedAdmin(!!loaderData?.adminProfile);
-      }
-    }
-  }, []);
-  return verifiedAdmin ? (
+
+  return loaderData?.adminProfile ? (
     <Outlet />
   ) : (
-    verifiedAdmin != null && (
-      <Fragment>
-        <Navigate to={props.destination} replace />
-      </Fragment>
-    )
+    <Navigate to={props.destination} replace />
   );
-  // return loaderData?.adminProfile ? <Outlet /> : element;
 };
 export async function loader() {
   let res;
@@ -60,12 +26,27 @@ export async function loader() {
       uiActions.setSnackBar({
         status: true,
         message: "You need to Login",
-        severity: "wanrning",
+        severity: "warning",
       })
     );
     return redirect("/login");
   } else {
-    return res;
+    let url = window.location.href;
+    if (
+      !url.endsWith("/admins") ||
+      res.adminProfile.role === roleTypes.SUPER_ADMIN
+    ) {
+      return res;
+    } else {
+      store.dispatch(
+        uiActions.setSnackBar({
+          status: true,
+          message: "Unauthorized access",
+          severity: "warning",
+        })
+      );
+      return redirect("/login");
+    }
   }
 }
 export default ProtectedRoutes;
